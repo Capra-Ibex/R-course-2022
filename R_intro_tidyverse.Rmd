@@ -207,7 +207,7 @@ Copy-paste the output from the R console into your script so that you only need 
 ```
 
 ---
-## R code with R project
+## Saved by the R project
 
 - .Rproj file
 - All your project inside a folder
