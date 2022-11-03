@@ -1,9 +1,9 @@
 ---
 title: "Statistical testing "
-subtitle: "Week 3 LOVE'R course"
-author: "Tania L. Maxwell <br> email: tania.maxwell@inrae.fr <br> twitter: @tania_maxwell7 <br> website: tania-maxwell.github.io"
+subtitle: "Session 3 LOVE'R course"
+author: "Pablo Raguet <br> email: pablo.raguet@inrae.fr <br> <br> <br> original teacher: Tania L. Maxwell <br> website: tania-maxwell.github.io"
 
-date: '15-11-2021'
+date: '14-11-2022'
 output:
   xaringan::moon_reader:
     css: ["default", "rladies", "rladies-fonts"]
@@ -41,9 +41,11 @@ library(dplyr)
 library(multcomp)
 library(lme4)
 
-setwd("C:/Users/tmaxwell/Documents/Teaching/M2_B2AS_R-stats")
-maize_data <- read.table("2a-GrainYield_components_Plot_level-1.csv", 
-                         header = T, sep = ",") 
+dir <- getwd()
+setwd(dir)
+maize_data <- read.table("Data/2a-GrainYield_components_Plot_level.csv", 
+                         header = T, sep = ",") %>% 
+  dplyr::select(-type)
 
 maize_data$year <- as.factor(maize_data$year)
 maize_data$Replicate <- as.factor(maize_data$Replicate)

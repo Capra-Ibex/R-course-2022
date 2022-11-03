@@ -1,9 +1,9 @@
 ---
 title: "R basics and the tidyverse "
-subtitle: "Week 1 LOVE'R course"
-author: "Tania L. Maxwell <br> email: tania.maxwell@inrae.fr <br> twitter: @tania_maxwell7 <br> website: tania-maxwell.github.io"
+subtitle: "Session 1 LOVE'R course"
+author: "Pablo Raguet <br> email: pablo.raguet@inrae.fr <br> <br> <br> original teacher: Tania L. Maxwell <br> website: tania-maxwell.github.io"
 
-date: '08-11-2021'
+date: '07-11-2022'
 output:
   xaringan::moon_reader:
     css: ["default", "rladies", "rladies-fonts"]
@@ -18,16 +18,25 @@ output:
 # do not run these lines, as they are the output of the function sessionInfo()
 
 # sessionInfo()
-# R version 4.1.0 (2021-05-18)
-# Platform: x86_64-w64-mingw32/x64 (64-bit)
-# Running under: Windows 10 x64 (build 19043)
+# R version 4.1.3 (2022-03-10)
+# Platform: x86_64-redhat-linux-gnu (64-bit)
+# Running under: Fedora Linux 36 (Workstation Edition)
 # 
 # Matrix products: default
 # 
 # locale:
-# [1] LC_COLLATE=French_France.1252  LC_CTYPE=French_France.1252    LC_MONETARY=French_France.1252
-# [4] LC_NUMERIC=C                   LC_TIME=French_France.1252    
-# 
+#  [1] LC_CTYPE=fr_FR.UTF-8    
+#  [2] LC_NUMERIC=C
+#  [3] LC_TIME=fr_FR.UTF-8       
+#  [4] LC_COLLATE=fr_FR.UTF-8    
+#  [5] LC_MONETARY=fr_FR.UTF-8   
+#  [6] LC_MESSAGES=fr_FR.UTF-8   
+#  [7] LC_PAPER=fr_FR.UTF-8      
+#  [8] LC_NAME=C                 
+#  [9] LC_ADDRESS=C              
+# [10] LC_TELEPHONE=C            
+# [11] LC_MEASUREMENT=fr_FR.UTF-8
+# [12] LC_IDENTIFICATION=C   
 # attached base packages:
 # [1] stats     graphics  grDevices utils     datasets  methods   base     
 # 
@@ -35,13 +44,11 @@ output:
 # [1] dplyr_1.0.6
 # 
 # loaded via a namespace (and not attached):
-#  [1] Rcpp_1.0.7       pillar_1.6.1     bslib_0.3.1      compiler_4.1.0   later_1.2.0      jquerylib_0.1.4 
-#  [7] highr_0.9        tools_4.1.0      digest_0.6.27    jsonlite_1.7.2   evaluate_0.14    lifecycle_1.0.0 
-# [13] tibble_3.1.2     pkgconfig_2.0.3  rlang_0.4.11     cli_2.5.0        rstudioapi_0.13  yaml_2.2.1      
-# [19] xfun_0.23        fastmap_1.1.0    stringr_1.4.0    knitr_1.33       generics_0.1.0   vctrs_0.3.8     
-# [25] sass_0.4.0       tidyselect_1.1.1 glue_1.4.2       R6_2.5.0         fansi_0.4.2      rmarkdown_2.11  
-# [31] xaringan_0.22    purrr_0.3.4      magrittr_2.0.1   servr_0.23       promises_1.2.0.1 htmltools_0.5.2 
-# [37] ellipsis_0.3.2   mime_0.10        httpuv_1.6.3     utf8_1.2.1       stringi_1.6.1    crayon_1.4.1
+#  [1] compiler_4.1.3  fastmap_1.1.0   cli_3.3.0      
+#  [4] htmltools_0.5.2 tools_4.1.3     rstudioapi_0.13
+#  [7] xaringan_0.26   yaml_2.3.5      rmarkdown_2.14 
+# [10] knitr_1.39      xfun_0.31       digest_0.6.29  
+# [13] rlang_1.0.3     evaluate_0.15  
 
 ```
 
@@ -56,13 +63,13 @@ background-size: 30%
 ## Who am I?
 - Final year PhD student at INRAE, finishing a double degree program between the Université de Bordeaux and Université Laval in Québec
 
-- Studying the effect of tree diversity and water availability on nutrient cycling in forests
+- Studying the dynamic and modelling of organic phosphorus in cropped soil under various field conditions.
 
 - R enthusiast, coder
 
 
-```{r cycle, echo = FALSE, out.width = '30%',fig.align = "center"}
-knitr::include_graphics("images/week1/Picto.png")
+```{r cycle, echo = FALSE, out.width = '40%',fig.align = "center"}
+knitr::include_graphics("images/week1/CycleP_simple3_EN-page002.png")
 ```
 
 
@@ -82,15 +89,15 @@ knitr::include_graphics("images/week1/r_first_then.png")
 
 --
 
-- Optimize your dataset table (week 1)
+- Optimize your dataset table (7/11)
 
 --
 
-- Choose a statistical model according to your scientific question (weeks 2 & 3)
+- Choose a statistical model according to your scientific question (10/11 & 14/11)
 
 --
 
-- Create reproducible graphics (week 4)
+- Create reproducible graphics (17/11)
 
 --
 
@@ -104,13 +111,13 @@ knitr::include_graphics("images/week1/r_first_then.png")
 
 - When you see this symbol, you use code to answer a question that I've stated:
 
-```{r, echo=FALSE, fig.cap="", out.width = '30%',fig.align = "left"}
+```{r, echo=FALSE, fig.cap="", out.width = '25%',fig.align = "left"}
 knitr::include_graphics("images/week1/exercise_smaller.png")
 ```
 
 - Don't hesitate to ask questions  
 
-- There will be a final project to be done in groups of 2, with a presentation on November 29th (more details will be given at the end of this course). 
+- There will be a final project to be done in groups of 2, with a presentation on November 24th (more details will be given at the end of this course). 
 
 ---
 
@@ -161,7 +168,7 @@ Save the R Script with an easy-to-find name
 - Comment your code by using the # symbol 
 - Write in your script, and then click **run** to evaluate the code in the console 
 
-<center> Tip: You can also press "Ctrl" and "Enter" to run your code </center> 
+**Tip:** You can also press "Ctrl" and "Enter" to run your code
 
 ---
 
@@ -171,15 +178,99 @@ Save the R Script with an easy-to-find name
 knitr::include_graphics("images/week1/Rstudio.png")
 ```
 
-Tip: you can change the colors of RStudio in 
+**Tip:** you can change the colors of RStudio in 
 
 <center> Tools → Global Options → Appearance </center>
 
 ---
 
+## Working directory
+
+### In RStudio
+We use the `setwd()` function so that R knows where to look for the data table. We can use `getwd()` to see in which directory we currently are.
+
+```{r setwd}
+getwd()
+```
+
+--
+
+
+**Tip:** manually set your directory by clicking
+
+<center> Session → Set Working Directory → Choose Directory </center>
+
+Copy-paste the output from the R console into your script so that you only need to do it once. 
+
+```{r}
+# setwd("/directory/of/your/R-script/from/root")
+```
+
+---
+## R code with R project
+
+- .Rproj file
+- All your project inside a folder
+- Relative path
+- code reproductivity
+- Git use
+
+---
+
+## Renv the package manager
+
+- local save of packages and their version
+- limit code break due to package update
+
+---
+
+## Tips for Rproj
+
+### Structure your path
+- Folders "data", "Export"
+- names your scripts starting by a number (01)
+- tell to another coder which script should be run first
+
+### Structure your code
+- Head
+- Working directory check
+- loading packages (next slide)
+- data import (further slide)
+- Divide your code in parts and eventually in different scripts
+  - Data manipulation
+  - Statistics
+  - Graphics
+  - Exportation
+
+Tips: create a separate .R script for function
+ call by `source("name_of_fun_file.R")`
+---
+## Loading the necessary package(s)
+
+If you have not yet installed the metapackage `tidyverse`, you can do by clicking in the bottom right pannel: 
+
+<center> Packages → Install, and typing the package name </center>
+
+Or, you can run it in your script without the #
+```{r}
+# install.packages("tidyverse")
+```
+
+--
+
+You need to tell R where to look in its library for the packages you will use in your script.
+
+```{r}
+library(tidyverse)
+```
+
+**Tip:** At the beginning of each script, only include the libraries which you will actually use. 
+
+---
+
 ## R as a calculator
 
-```{r, echo=FALSE, fig.cap="", out.width = '30%',fig.align = "left"}
+```{r, echo=FALSE, fig.cap="", out.width = '25%',fig.align = "left"}
 knitr::include_graphics("images/week1/exercise_smaller.png")
 ```
 Type the following in your script and execute your code:
@@ -196,12 +287,12 @@ Type the following in your script and execute your code:
 --
 What does the [1] mean ?
 
-Hint: type `1:100` into your script
+Hint: type `1:50` into your script
 
 --
 
 ```{r intro to index}
-1:100
+1:50
 ```
 
 The [1] is a way to **index** the output = to locate the place in the string of numbers
@@ -221,7 +312,7 @@ var2 <- 2+3
 --
 
 <br>
-```{r, echo=FALSE, fig.cap="", out.width = '30%',fig.align = "left"}
+```{r, echo=FALSE, fig.cap="", out.width = '25%',fig.align = "left"}
 knitr::include_graphics("images/week1/exercise_smaller.png")
 ```
 Create a new variable which is the multiplication of var1 and var2
@@ -238,6 +329,24 @@ var3 <- var1*var2
 
 ```{r objects3}
 var3
+```
+
+---
+## Arithmetic operators in R
+
+| Character |  | Character |  | 
+|---| ---  | --- | ---  |
+| + | addition | / | division |
+| - | substraction | %/%  | integer division |
+| ^ | exponent | %%   | modulus | 
+| * | multiplication |  |  |  | 
+
+--
+Examples of different operators:
+
+```{r Math op}
+10/3 ; 10%/%3 ; 10%%3
+
 ```
 
 ---
@@ -263,6 +372,10 @@ var3
 
 - Choose names which add meaning to your code (because it is likely that in 3 months you will have to decipher your code) 
 
+--
+
+- Use relatively short names (recommended)
+
 ---
 
 ## Functions 
@@ -278,7 +391,93 @@ var4 <- sum(var1,var2,var3)
 var4
 ```
 
-We use functions a LOT. Functions have arguments that need a certain order (to be detailled later)
+Functions have arguments that need a certain order (to be detailled later)
+
+--
+
+Some useful arithmetic function:
+
+| Function | *single results*  | Function | *applied to each element of a vector* | 
+|---| ---  | --- | ---  |
+| sum() | addition | exp() | exponential |
+| mean() | average | log()  | logarythm |
+| prod() | multiplication | sqrt()   | square root | 
+| sd() | standard deviation | ? |  standard error  | 
+
+---
+## Build your own function (1)
+
+Create an object with the `function()` function. Example for coefficient of variation:
+
+```{r Build var fun}
+var5 <- c(2, 6, 1, 8)
+```
+  
+```{r Build fun cv}
+Fun.cv <- function(x) { 
+  cv <- sd(x) / mean(x)
+  return(cv)
+}
+Fun.cv(var5)
+```
+
+--
+
+Usefull functions to build your own function:
+
+| Function | Effect  | Function | Effect  |
+| --- | ---  | ---  | ---  |
+| print(x) | print the object `x` | stop(m) | stop the function and print the message `m` | 
+| return(x) | return the object `x` at the end of the function | warning(m) | print a warning with the message `m`  |
+
+---
+## Build your own function (2)
+```{r, echo=FALSE, fig.cap="", out.width = '25%',fig.align = "left"}
+knitr::include_graphics("images/week1/exercise_smaller.png")
+```
+The standard error function does not exist in R, how would you build that function ?
+
+Use:
+```{r Vect for fun}
+var5 <- c(2, 6, 1, 8) ; var5
+```
+
+--
+
+**Tips:**
+
+$se = \frac{\sigma}{\sqrt{n}}$
+
+With $\sigma$ the vector standard deviation and `n` the `length()` of the vector.
+
+---
+## Build your own function: solution(s)
+
+--
+
+- Simple solution
+
+```{r Std.err.fun.simple}
+Fun.se.1 <- function(x){sd(x)/sqrt(length(x))}
+```
+
+```{r Std.simple}
+Fun.se.1(var5)
+```
+
+--
+
+- Complex solution
+```{r Std.err.fun.comp}
+Fun.se.2 <- function(x){
+  a <- (sd(x)/sqrt(length(x)))
+  return(a)
+}
+```
+
+```{r Std.comp}
+Fun.se.2(var5)
+```
 
 ---
 
@@ -292,10 +491,10 @@ knitr::include_graphics("images/week1/data_structure.png")
 
 ## Let's create a data frame from scratch
 
-```{r, echo=FALSE, fig.cap="", out.width = '30%',fig.align = "left"}
+```{r, echo=FALSE, fig.cap="", out.width = '25%',fig.align = "left"}
 knitr::include_graphics("images/week1/exercise_smaller.png")
 ```
-Step 1: Create vectors 
+**Step 1:** Create vectors 
 
 ```{r vectors}
 #Character vectors
@@ -313,22 +512,28 @@ diameter <- c(2.3, 3.4, 4.3, 4.8)
 
 --
 
-Step 2 : Combine the vectors with the `data.frame()` function
+**Step 2:** Combine the vectors with the `data.frame()` function
 
 ```{r dataframe}
 
-plant_data <- data.frame(plant_sp, treatment, diameter)
-plant_data
+plant_data <- data.frame(plant_sp, treatment, diameter) ; plant_data
 ```
-
 
 ---
 
 ## Indexing 
 
-<center> data_frame_name[row, column] </center>
+data_frame_name[`row`, `column`]
 
-Example: 
+matrix[`row`, `column`]
+
+vector[`element`]
+
+list[[`element`]]
+
+--
+
+**Example:** 
 
 `plant_data[1, ]` → Extracts the first row
 
@@ -336,11 +541,7 @@ Example:
 
 `plant_data[ ,3]` → Extracts the third column
 
-
--- 
-
-
-```{r, echo=FALSE, fig.cap="", out.width = '30%',fig.align = "left"}
+```{r, echo=FALSE, fig.cap="", out.width = '25%',fig.align = "left"}
 knitr::include_graphics("images/week1/exercise_smaller.png")
 ```
 
@@ -381,7 +582,7 @@ plant_data_reduced2
 
 ## Your turn
 
-```{r, echo=FALSE, fig.cap="", out.width = '30%',fig.align = "left"}
+```{r, echo=FALSE, fig.cap="", out.width = '25%',fig.align = "left"}
 knitr::include_graphics("images/week1/exercise_smaller.png")
 ```
 
@@ -410,6 +611,14 @@ reduced_option2
 
 ## Where to find help 
 
+R help and documentation:
+
+- press `F1` with the cursor on the function
+
+- execute `?function`
+
+--
+
 Online! 
 
 - Stackoverflow
@@ -426,10 +635,32 @@ layout: false
 
 class: center, middle
 
-## Tidy data: using the `dplyr` package
+## Tidy data: using the `tidyverse` metapackage
 
-```{r, echo=FALSE, fig.cap="", out.width = '30%',fig.align = "center"}
-knitr::include_graphics("images/week1/dplyrsticker.png")
+```{r, echo=FALSE, fig.cap="", out.width = '60%',fig.align = "center"}
+library(gridExtra)
+library(ggplot2)
+library(grid)
+library(png)
+
+p0 <- readPNG("images/week1/dplyrsticker.png")
+p1 <- readPNG("images/week1/ggplot.png")
+p2 <- readPNG("images/week1/forcats.png")
+p3 <- readPNG("images/week1/purrr.png")
+p4 <- readPNG("images/week1/tidyr.png")
+p5 <- readPNG("images/week1/stringr.png")
+p6 <- readPNG("images/week1/readr.png")
+
+g0 <- rasterGrob(p0)
+g1 <- rasterGrob(p1)
+g2 <- rasterGrob(p2)
+g3 <- rasterGrob(p3)
+g4 <- rasterGrob(p4)
+g5 <- rasterGrob(p5)
+g6 <- rasterGrob(p6)
+
+grid.arrange(g0,g1, g2, g3, g4, g5, g6, ncol = 3)
+
 ```
 
 ---
@@ -475,7 +706,7 @@ Example: You are setting up an experiment with four plants of corn, and you are 
 |...| ... | ...|
 
 
-This is what we call 'tidy data'
+This is what we call 'tidy data' or 'long format'.
 ---
 ## Introduction to 'tidy data'
 
@@ -500,51 +731,6 @@ knitr::include_graphics("images/week1/tidydata_2.jpg")
 ```
 <center> @allison_horst </center>
 
---
-
-## Working directory
-
-### In RStudio
-We use the `setwd()` function so that R knows where to look for the data table. We can use `getwd()` to see in which directory we currently are.
-
-```{r setwd}
-getwd()
-```
-
---
-
-
-Tip: manually set your directory by clicking
-
-<center> Session → Set Working Directory → Choose Directory </center>
-
-Copy-paste the output from the R console into your script so that you only need to do it once. 
-
-```{r}
-setwd("C:/Users/tmaxwell/Documents/Teaching/M2_B2AS_R-stats")
-```
-
----
-## Loading the necessary package(s)
-
-If you have not yet installed the package `dplyr`, you can do by clicking in the bottom right pannel: 
-
-<center> Packages → Install, and typing the package name </center>
-
-Or, you can run it in your script without the #
-```{r}
-# install.packages("dplyr")
-```
-
---
-
-You need to tell R where to look in its library for the packages you will use in your script.
-
-```{r}
-library(dplyr)
-```
-
-Tip: At the beginning of each script, only include the libraries which you will actually use. 
 
 ---
 
@@ -555,7 +741,7 @@ If data is under Excel file format, save as a .csv or a .txt file.
 We use the `read.table()` function. The "sep" (separator) will likely be different whether you are importing a .csv or a .txt file.
 
 ```{r}
-data_co2 <- read.table("CO2_data_fromR.txt", header = TRUE, sep = "\t")
+data_co2 <- read.table("Exemple/CO2_data_fromR.txt", header = TRUE, sep = "\t")
 ```
 
 - The dataset shows results of an experiment on the cold tolerance of grass. 
@@ -563,7 +749,6 @@ data_co2 <- read.table("CO2_data_fromR.txt", header = TRUE, sep = "\t")
 - Their CO<sub>2</sub> uptake rate was tested at different CO<sub>2</sub> concentrations.
 
 ---
-
 
 ## Exploring the data
 
@@ -608,7 +793,7 @@ Let's say we want to make the ID number a **factor**, we can use the `as.factor(
 
 ```{r}
 #testing the as.factor() function
-data_co2$ID <- as.factor(data_co2$ID)
+# data_co2$ID <- as.factor(data_co2$ID)
 ```
 <br> 
 Note: Similarly, you can make a factor as a numeric value with `as.numeric()`. 
@@ -665,7 +850,7 @@ data_co2_means
 - `mean =` names the column in which the `mean(uptake)` is written  
 --
 
-```{r, echo=FALSE, fig.cap="", out.width = '30%',fig.align = "left"}
+```{r, echo=FALSE, fig.cap="", out.width = '25%',fig.align = "left"}
 knitr::include_graphics("images/week1/exercise_smaller.png")
 ```
 Make a new data table in which you calculate the mean of the CO2 uptake per plant Type (Quebec vs. Mississippi)  
@@ -687,7 +872,7 @@ data_co2_means_type
 
 #Challenge: means, se, n per group
 
-```{r, echo=FALSE, fig.cap="", out.width = '30%',fig.align = "left"}
+```{r, echo=FALSE, fig.cap="", out.width = '25%',fig.align = "left"}
 knitr::include_graphics("images/week1/exercise_smaller.png")
 ```
 Make a new data table in which you calculate the number of variables per observation (n), mean, and standard error of uptake per plant Type (Quebec vs. Mississippi)  
@@ -709,7 +894,7 @@ data_co2_means_se
 
 ## Terminology
 
-`dplyr::` means we are using a function from the dplyr package 
+`dplyr::` means we are using a function from the dplyr package without loading all the package.
 
 x %>% f(y)is the same as f(x, y), 
 
@@ -860,7 +1045,7 @@ https://seananderson.ca/2014/09/13/dplyr-intro/
 
 -	In pairs (groups of 2), select 2 papers which use linear regressions, ANOVAs and/or mixed models in their statistical analyses (we will go through these in class)
 
-- Send the papers to me by Friday, Nov. 12th (tania.maxwell@inrae.fr), I will choose 1 of those papers for you to prepare a critique 
+- Send the papers to me by Friday, Nov. 12th (pablo.raguet@inrae.fr), I will choose 1 of those papers for you to prepare a critique 
 
 -	On Monday, Nov. 29th, give a 12min presentation and answer 5-10min of questions (T. Maxwell)
 

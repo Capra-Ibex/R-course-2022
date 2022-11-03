@@ -1,9 +1,9 @@
 ---
 title: "Statistical testing"
-subtitle: "Weeks 2 and 3 LOVE'R course"
-author: "Tania L. Maxwell <br> email: tania.maxwell@inrae.fr <br> twitter: @tania_maxwell7 <br> website: tania-maxwell.github.io"
+subtitle: "Session 2 and 3 LOVE'R course"
+author: "Pablo Raguet <br> email: pablo.raguet@inrae.fr <br> <br> <br> original teacher: Tania L. Maxwell <br> website: tania-maxwell.github.io"
 
-date: '12-11-2021'
+date: '10-11-2022'
 output:
   xaringan::moon_reader:
     css: ["default", "rladies", "rladies-fonts"]
@@ -93,17 +93,18 @@ Examples:
 ## Data Import
 
 ```{r , message = FALSE, warning = F}
-library(tidyr)
-library(dplyr)
+library(tidyverse)
 library(corrplot)
 library(corrgram)
 library(multcomp)
 library(nlme)
 library(lme4)
 
-setwd("C:/Users/tmaxwell/Documents/Teaching/M2_B2AS_R-stats")
-maize_data <- read.table("2a-GrainYield_components_Plot_level-1.csv", 
-                         header = T, sep = ",") 
+dir <- getwd()
+setwd(dir)
+maize_data <- read.table("Data/2a-GrainYield_components_Plot_level.csv", 
+                         header = T, sep = ",") %>% 
+  dplyr::select(-type)
 ```
 
 Note: Because we are importing a `.csv` file, the `sep = ` will be a comma. 
@@ -114,7 +115,7 @@ knitr::include_graphics("images/week1/exercise_smaller.png")
 
 What kind of data do we have here? 
 
-Hint: Click on the data in your Global Environmentm, and use the `str()` function, 
+Hint: Click on the data in your Global Environment, and use the `str()` function, 
 
 ---
 
@@ -246,7 +247,7 @@ Which test do you think we should use? Why?
 Why? 
 - Looking for the **relation** between two variables 
 - There is not a clear cause and effect relationship between the variables (linear regression)
-- There may be a third non-measured variable which acts on both the varibles in the correlation 
+- There may be a third non-measured variable which acts on both the variables in the correlation 
 
 ---
 
@@ -340,7 +341,7 @@ H<sub>0</sub> : r = 0 (there is no correlation)  H<sub>1</sub> : r <span>&#8800;
 cor.test(maize_Gaillac_red$grain.weight, maize_Gaillac_red$tassel.height)
 ```
 
-The Pearson's coreltation shows a significant positive (`cor` value is positive) relationship. 
+The Pearson's correltation shows a significant positive (`cor` value is positive) relationship. 
 
 ---
 **However,** a significant result is not very informative (with a large number of samples, anything can become significant)
