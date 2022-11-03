@@ -32,8 +32,10 @@ class: center, middle, inverse, title-slide
 
 
 
+
+
 layout: true
-background-image: url(images/logos_new.png)
+background-image: url(Images/logos_new.png)
 background-position: 50% 100%
 background-size: 30%
 
@@ -47,14 +49,14 @@ background-size: 30%
 - R enthusiast, coder
 
 
-&lt;img src="images/week1/CycleP_simple3_EN-page002.png" width="40%" style="display: block; margin: auto;" /&gt;
+&lt;img src="Images/week1/CycleP_simple3_EN-page002.png" width="40%" style="display: block; margin: auto;" /&gt;
 
 
 ---
 
 ## 
 
-&lt;img src="images/week1/r_first_then.png" width="60%" style="display: block; margin: auto;" /&gt;
+&lt;img src="Images/week1/r_first_then.png" width="60%" style="display: block; margin: auto;" /&gt;
 &lt;center&gt; @allison_horst &lt;/center&gt;
 
 ---
@@ -86,7 +88,7 @@ background-size: 30%
 
 - When you see this symbol, you use code to answer a question that I've stated:
 
-&lt;img src="images/week1/exercise_smaller.png" width="25%" style="display: block; margin: auto auto auto 0;" /&gt;
+&lt;img src="Images/week1/exercise_smaller.png" width="25%" style="display: block; margin: auto auto auto 0;" /&gt;
 
 - Don't hesitate to ask questions  
 
@@ -103,7 +105,7 @@ class: center, middle
 ---
 
 layout: true
-background-image: url(images/logos_new.png)
+background-image: url(Images/logos_new.png)
 background-position: 50% 100%
 background-size: 30%
 
@@ -117,18 +119,20 @@ R is open source, which means there are plenty of great solutions to issues that
 
 --
 
-&lt;img src="images/week1/the_why_r_plot.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="Images/week1/the_why_r_plot.png" width="80%" style="display: block; margin: auto;" /&gt;
 &lt;center&gt; @CSBQ &lt;/center&gt;
 
 
 ---
 ## Let's get started
 
-Open Rstudio, click on:  
+**Step 1:** Create a new folder for the R course
+
+**Step 2:** Open Rstudio, click on:  
 
 &lt;center&gt; File → New File → R Script &lt;/center&gt;
 
-Save the R Script with an easy-to-find name
+**Step 3:** Save the R Script with an easy-to-find name in the new-created folder
 
 &lt;br&gt; 
 
@@ -145,7 +149,7 @@ Save the R Script with an easy-to-find name
 
 ## Explore R Studio
 
-&lt;img src="images/week1/Rstudio.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="Images/week1/Rstudio.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 **Tip:** you can change the colors of RStudio in 
 
@@ -160,15 +164,10 @@ We use the `setwd()` function so that R knows where to look for the data table. 
 
 
 ```r
-getwd()
-```
-
-```
-## [1] "/home/pablo/Documents/THESE/Teachings/R-course-2022"
+# getwd()
 ```
 
 --
-
 
 **Tip:** manually set your directory by clicking
 
@@ -182,43 +181,83 @@ Copy-paste the output from the R console into your script so that you only need 
 ```
 
 ---
-## R code with R project
+## Saved by the R project
 
-- .Rproj file
-- All your project inside a folder
-- Relative path
-- code reproductivity
-- Git use
+&lt;center&gt; Go up-left or up-right → Create new project → Choose Directory &lt;/center&gt;
+
+**Advantages:**
+- All your scripts, data, table and figure in one folder
+- Relative path for working directory
+- Code reproducibility
+- Allow to use Git for code versioning (advanced use)
+
+--
+
+**Give it a try:**
+
+
+```r
+getwd()
+```
+
+```
+## [1] "/home/pablo/Documents/THESE/Teachings/R-course-2022"
+```
 
 ---
 
 ## Renv the package manager
 
-- local save of packages and their version
-- limit code break due to package update
+Within a open R project:
+
+&lt;center&gt; Tools → Project Options → Environments → Tick *use renv* &lt;/center&gt;
+
+**Advantages:**
+
+- Local save of packages and their versions
+- Limit code break due to package update
+
+--
+
+**Tips:**
+
+Some renv functions (call: `renv::function()`):
+
+| Function | effects  | Function | effects | 
+|---| ---  | --- | ---  |
+| activate() | activate renv | upgrade() | upgrade renv version |
+| install() | install a package | update()  | update packages |
+| snapshot() | save packages versions | restore()   | restore packages version | 
 
 ---
 
-## Tips for Rproj
+## Structure your R project
 
-### Structure your path
-- Folders "data", "Export"
-- names your scripts starting by a number (01)
-- tell to another coder which script should be run first
+**Arrange your R scripts and folders:**
+- Name your scripts starting by a number (example: 01_name.R)
 
-### Structure your code
-- Head
+Tells you which script to run first !
+
+- Examples of folders "Data", "Export", "Export/Figure"
+
+--
+
+**Structure your code:**
+- Header
 - Working directory check
-- loading packages (next slide)
-- data import (further slide)
-- Divide your code in parts and eventually in different scripts
-  - Data manipulation
-  - Statistics
-  - Graphics
-  - Exportation
+- Loading packages (next slide)
+- Data import (further slide)
+- Divide your code in parts
 
-Tips: create a separate .R script for function
- call by `source("name_of_fun_file.R")`
+--
+
+**Tips (dispensable):** 
+
+- create a separate .R script for functions (`source("name_of_fun_file.R")`)
+- Use the snippets for automatic code: copy/paste the Snippet.txt in
+
+&lt;center&gt; Tools → Edit Code Snippets &lt;/center&gt;
+
 ---
 ## Loading the necessary package(s)
 
@@ -226,30 +265,23 @@ If you have not yet installed the metapackage `tidyverse`, you can do by clickin
 
 &lt;center&gt; Packages → Install, and typing the package name &lt;/center&gt;
 
-Or, you can run it in your script without the #
+You can also run it in your script without the `#`:
 
 ```r
 # install.packages("tidyverse")
 ```
+Or
 
+```r
+# renv::install("tidyverse")
+```
 --
 
 You need to tell R where to look in its library for the packages you will use in your script.
 
 
 ```r
-library(tidyverse)
-```
-
-```
-## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
-## ✔ ggplot2 3.3.6      ✔ purrr   0.3.5 
-## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
-## ✔ tidyr   1.2.1      ✔ stringr 1.4.1 
-## ✔ readr   2.1.3      ✔ forcats 0.5.2 
-## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()
+# library(tidyverse)
 ```
 
 **Tip:** At the beginning of each script, only include the libraries which you will actually use. 
@@ -258,7 +290,7 @@ library(tidyverse)
 
 ## R as a calculator
 
-&lt;img src="images/week1/exercise_smaller.png" width="25%" style="display: block; margin: auto auto auto 0;" /&gt;
+&lt;img src="Images/week1/exercise_smaller.png" width="25%" style="display: block; margin: auto auto auto 0;" /&gt;
 Type the following in your script and execute your code:
 
 &lt;center&gt; 5*9-2+4 &lt;/center&gt;
@@ -309,7 +341,7 @@ var2 &lt;- 2+3
 --
 
 &lt;br&gt;
-&lt;img src="images/week1/exercise_smaller.png" width="25%" style="display: block; margin: auto auto auto 0;" /&gt;
+&lt;img src="Images/week1/exercise_smaller.png" width="25%" style="display: block; margin: auto auto auto 0;" /&gt;
 Create a new variable which is the multiplication of var1 and var2
 
 --
@@ -423,6 +455,15 @@ Some useful arithmetic function:
 | sd() | standard deviation | ? |  standard error  | 
 
 ---
+
+layout: false
+
+class: center, middle
+
+## Advanced used of functions in R
+
+---
+
 ## Build your own function (1)
 
 Create an object with the `function()` function. Example for coefficient of variation:
@@ -447,7 +488,7 @@ Fun.cv(var5)
 
 --
 
-Usefull functions to build your own function:
+Useful functions to build your own function:
 
 | Function | Effect  | Function | Effect  |
 | --- | ---  | ---  | ---  |
@@ -456,7 +497,7 @@ Usefull functions to build your own function:
 
 ---
 ## Build your own function (2)
-&lt;img src="images/week1/exercise_smaller.png" width="25%" style="display: block; margin: auto auto auto 0;" /&gt;
+&lt;img src="Images/week1/exercise_smaller.png" width="25%" style="display: block; margin: auto auto auto 0;" /&gt;
 The standard error function does not exist in R, how would you build that function ?
 
 Use:
@@ -522,13 +563,13 @@ Fun.se.2(var5)
 
 ## Data structures in R
 
-&lt;img src="images/week1/data_structure.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="Images/week1/data_structure.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
 ## Let's create a data frame from scratch
 
-&lt;img src="images/week1/exercise_smaller.png" width="25%" style="display: block; margin: auto auto auto 0;" /&gt;
+&lt;img src="Images/week1/exercise_smaller.png" width="25%" style="display: block; margin: auto auto auto 0;" /&gt;
 **Step 1:** Create vectors 
 
 
@@ -586,7 +627,9 @@ list[[`element`]]
 
 `plant_data[ ,3]` → Extracts the third column
 
-&lt;img src="images/week1/exercise_smaller.png" width="25%" style="display: block; margin: auto auto auto 0;" /&gt;
+--
+
+&lt;img src="Images/week1/exercise_smaller.png" width="25%" style="display: block; margin: auto auto auto 0;" /&gt;
 
 Extract the second value from the third column
 
@@ -646,7 +689,7 @@ plant_data_reduced2
 
 ## Your turn
 
-&lt;img src="images/week1/exercise_smaller.png" width="25%" style="display: block; margin: auto auto auto 0;" /&gt;
+&lt;img src="Images/week1/exercise_smaller.png" width="25%" style="display: block; margin: auto auto auto 0;" /&gt;
 
 
 Create a new data frame with just rows 1 and 2, and columns 2 and 3 of the `plant_data` data frame 
@@ -715,24 +758,12 @@ class: center, middle
 
 ## Tidy data: using the `tidyverse` metapackage
 
-
-```
-## 
-## Attachement du package : 'gridExtra'
-```
-
-```
-## L'objet suivant est masqué depuis 'package:dplyr':
-## 
-##     combine
-```
-
-&lt;img src="R_intro_tidyverse_files/figure-html/unnamed-chunk-17-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+&lt;img src="R_intro_tidyverse_files/figure-html/unnamed-chunk-19-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
 ---
 
 layout: true
-background-image: url(images/logos_new.png)
+background-image: url(Images/logos_new.png)
 background-position: 50% 100%
 background-size: 30%
 
@@ -777,7 +808,7 @@ This is what we call 'tidy data' or 'long format'.
 ## Introduction to 'tidy data'
 
 
-&lt;img src="images/week1/tidydata_1.jpg" width="110%" style="display: block; margin: auto;" /&gt;
+&lt;img src="Images/week1/tidydata_1.jpg" width="110%" style="display: block; margin: auto;" /&gt;
 &lt;center&gt; @allison_horst &lt;/center&gt;
 
 ---
@@ -790,7 +821,7 @@ This is what we call 'tidy data' or 'long format'.
 
 - Moving from Excel to R for all calculations : reproducible 
 
-&lt;img src="images/week1/tidydata_2.jpg" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="Images/week1/tidydata_2.jpg" width="80%" style="display: block; margin: auto;" /&gt;
 &lt;center&gt; @allison_horst &lt;/center&gt;
 
 
@@ -804,7 +835,7 @@ We use the `read.table()` function. The "sep" (separator) will likely be differe
 
 
 ```r
-data_co2 &lt;- read.table("Exemple/CO2_data_fromR.txt", header = TRUE, sep = "\t")
+data_co2 &lt;- read.table("Data/Exemple/CO2_data_fromR.txt", header = TRUE, sep = "\t")
 ```
 
 - The dataset shows results of an experiment on the cold tolerance of grass. 
@@ -866,11 +897,14 @@ Let's say we want to make the ID number a **factor**, we can use the `as.factor(
 
 
 ```r
-#testing the as.factor() function
+# testing the as.factor() function
 # data_co2$ID &lt;- as.factor(data_co2$ID)
 ```
 &lt;br&gt; 
-Note: Similarly, you can make a factor as a numeric value with `as.numeric()`. 
+
+Similarly, you can make a factor as a numeric value with:
+
+`as.numeric()`, `as.character()`, `as.integer()`, etc. 
 ---
 
 ## More useful functions
@@ -918,7 +952,9 @@ Because this data table is 'tidy', we can use `dplyr` for such data manipulation
                       function 2 
                       etc... 
 
-This reads: "Make a new data table, where you take my data table, apply function 1 to it, and then apply function 2 to the new subset made by function 1 "
+This reads: 
+
+"Make a new data table, where you take my data table, apply function 1 to it, and then apply function 2 to the new subset made by function 1 "
 
 ---
 ## Example: means per group 
@@ -946,7 +982,7 @@ data_co2_means
 - `mean =` names the column in which the `mean(uptake)` is written  
 --
 
-&lt;img src="images/week1/exercise_smaller.png" width="25%" style="display: block; margin: auto auto auto 0;" /&gt;
+&lt;img src="Images/week1/exercise_smaller.png" width="25%" style="display: block; margin: auto auto auto 0;" /&gt;
 Make a new data table in which you calculate the mean of the CO2 uptake per plant Type (Quebec vs. Mississippi)  
 
 
@@ -975,47 +1011,32 @@ data_co2_means_type
 
 #Challenge: means, se, n per group
 
-&lt;img src="images/week1/exercise_smaller.png" width="25%" style="display: block; margin: auto auto auto 0;" /&gt;
+&lt;img src="Images/week1/exercise_smaller.png" width="25%" style="display: block; margin: auto auto auto 0;" /&gt;
 Make a new data table in which you calculate the number of variables per observation (n), mean, and standard error of uptake per plant Type (Quebec vs. Mississippi)  
 
-Hint: use the `summarise_each()` and the `funs()` function: 
+**Hint:** use the `summarise_at()` and the `funs()` function: 
 
-&lt;center&gt; summarise_each(funs(n = n(), mean = mean(.), se = sd(.)/sqrt(n())), "uptake") &lt;/center&gt;
+&lt;center&gt; summarise_at(c("uptake"), 
+                      list(N = ~n(), 
+                          Mean = ~mean(.), 
+                          SE = ~(sd(.)/sqrt(n())))) &lt;/center&gt;
 
 --
 
 
 ```r
-data_co2_means_se&lt;- data_co2 %&gt;%
+data_co2_means_se &lt;- data_co2 %&gt;%
   group_by(Type) %&gt;%
-  summarise_each(funs(n = n(), mean = mean(.), se = sd(.)/sqrt(n())), "uptake")
-```
-
-```
-## Warning: `summarise_each_()` was deprecated in dplyr 0.7.0.
-## ℹ Please use `across()` instead.
-## ℹ The deprecated feature was likely used in the dplyr package.
-##   Please report the issue at &lt;]8;;https://github.com/tidyverse/dplyr/issueshttps://github.com/tidyverse/dplyr/issues]8;;&gt;.
-```
-
-```
-## Warning: `funs()` was deprecated in dplyr 0.8.0.
-## ℹ Please use a list of either functions or lambdas:
-## 
-## # Simple named list: list(mean = mean, median = median)
-## 
-## # Auto named with `tibble::lst()`: tibble::lst(mean, median)
-## 
-## # Using lambdas list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))
-```
-
-```r
+  summarise_at(c("uptake"),
+               list(N = ~n(),
+                    Mean = ~mean(.),
+                    SE = ~(sd(.)/sqrt(n()))))
 data_co2_means_se  
 ```
 
 ```
 ## # A tibble: 2 × 4
-##   Type            n  mean    se
+##   Type            N  Mean    SE
 ##   &lt;chr&gt;       &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
 ## 1 Mississippi    42  20.9  1.21
 ## 2 Quebec         42  33.5  1.49
@@ -1042,7 +1063,7 @@ x %&gt;% f(y)is the same as f(x, y),
 
 ## Filtering a data table
 
-&lt;img src="images/week1/dplyr_filter.jpg" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="Images/week1/dplyr_filter.jpg" width="100%" style="display: block; margin: auto;" /&gt;
 &lt;center&gt;@allison_horst&lt;/center&gt;
 
 
@@ -1050,11 +1071,11 @@ x %&gt;% f(y)is the same as f(x, y),
 
 ## Your turn
 
-&lt;img src="images/week1/exercise_smaller.png" width="30%" style="display: block; margin: auto auto auto 0;" /&gt;
+&lt;img src="Images/week1/exercise_smaller.png" width="30%" style="display: block; margin: auto auto auto 0;" /&gt;
 
 Using the previous tutorial, filter the data table for the nonchilled treatment in Quebec? 
 
-Hint: 
+**Hint:** 
 
       new_df &lt;- dplyr:: filter(df, ...)  is the same as 
       new_df&lt;- df %&gt;%
@@ -1089,42 +1110,57 @@ And what if we want to directly find the n, mean, and standard error?
 ```r
 quebec_nonchilled_mean&lt;- data_co2 %&gt;%
   filter(Type == "Quebec" &amp; Treatment == "nonchilled") %&gt;%
-  summarise_each(funs( n = n(), mean = mean(.), se = sd(.)/sqrt(n())), "uptake")
+  summarise_at(c("uptake"),
+               list(N = ~n(),
+                    Mean = ~mean(.),
+                    SE = ~(sd(.)/sqrt(n()))))
 quebec_nonchilled_mean
 ```
 
 ```
-##    n     mean     se
+##    N     Mean     SE
 ## 1 21 35.33333 2.0941
 ```
 
 ---
 
-## Logics in R 
+## Logics and relations in R 
 
-|Character|| Character||
+Can be used within the functions (i.e. when using `filter()`)
+
+| Character | Logics | Character | Relations |
 |---|---|---|---|
-| &lt; | Less than | &gt; | Greater than |
-| != | Not equal to | == | Equal to |
-| is.na |Is NA | !is.na |Is not NA |
-| &lt;= |Less than or equal to | &gt;= |Greater than or equal to
-|%in% |Group membership | 
-| &amp;| and| I | or
+| == | Less than | &lt; | Less than |
+| != | Not equal to | &gt; | Greater than |
+| &amp;  | and | &gt;= |Greater than or equal to |
+| I  | or | &lt;= | Less than or equal to |
 
-This can be used within the functions (i.e. when using `filter()`)
+--
+
+Other logics:
+
+- `is.na()`: is NA (and other is.something() operators)
+- `%in%`: group membership
+- `!`: opposition (e.g. `!si.na()`: is not NA)
+
+--
+
+Useful function:
+- `which()`
+- `grep()`, `grepl()` and orther regexpr functions
 
 ---
 
 ## More examples
 
 
-&lt;img src="images/week1/exercise_smaller.png" width="30%" style="display: block; margin: auto auto auto 0;" /&gt;
+&lt;img src="Images/week1/exercise_smaller.png" width="30%" style="display: block; margin: auto auto auto 0;" /&gt;
 Pick one or both questions, and use the appropriate function to answer them: 
 
 1. What is the mean `uptake` for each treatment type, for concentration values greater than or equal to 350?
 
 2. Add a new column to the data frame, which multiplies the `conc` by the `uptake`
-Hint: use the `mutate()` function 
+**Hint:** use the `mutate()` function 
 
 &lt;br&gt;
 
@@ -1137,8 +1173,8 @@ https://rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf
 
 
 ```r
-#question 1: mean uptake for each treatment type, 
-#for concentration values greater than or equal to 350?
+# question 1: mean uptake for each treatment type, 
+# for concentration values greater than or equal to 350?
 treat_above350 &lt;- data_co2 %&gt;%
   filter(conc &gt;= 350) %&gt;%
   group_by(Treatment) %&gt;%
@@ -1155,31 +1191,28 @@ treat_above350
 ```
 
 ```r
-#question 2: add a new column to the data frame
-#which multiplies the `conc` by the `uptake`
+# question 2: add a new column to the data frame
+# which multiplies the `conc` by the `uptake`
 data_co2 &lt;- data_co2 %&gt;%
   mutate(mult = conc*uptake)
-head(data_co2)
+head(data_co2, 3)
 ```
 
 ```
-##   Plant   Type  Treatment conc uptake  mult
-## 1   Qn1 Quebec nonchilled   95   16.0  1520
-## 2   Qn1 Quebec nonchilled  175   30.4  5320
-## 3   Qn1 Quebec nonchilled  250   34.8  8700
-## 4   Qn1 Quebec nonchilled  350   37.2 13020
-## 5   Qn1 Quebec nonchilled  500   35.3 17650
-## 6   Qn1 Quebec nonchilled  675   39.2 26460
+##   Plant   Type  Treatment conc uptake mult
+## 1   Qn1 Quebec nonchilled   95   16.0 1520
+## 2   Qn1 Quebec nonchilled  175   30.4 5320
+## 3   Qn1 Quebec nonchilled  250   34.8 8700
 ```
 
 ---
 
 ## So how does R compare to Excel? 
 
-&lt;img src="images/week1/excel_dinosaur.png" width="60%" style="display: block; margin: auto;" /&gt;
+&lt;img src="Images/week1/excel_dinosaur.png" width="60%" style="display: block; margin: auto;" /&gt;
 &lt;center&gt; @dinosaur &lt;/center&gt;
 
-Manipulating data in R is reproducible and tracable, which means it is less prone to user errors.  
+Manipulating data in R is reproducible and traceable, which means it is less prone to user errors.  
 
 ---
 
@@ -1206,9 +1239,9 @@ https://seananderson.ca/2014/09/13/dplyr-intro/
 
 -	In pairs (groups of 2), select 2 papers which use linear regressions, ANOVAs and/or mixed models in their statistical analyses (we will go through these in class)
 
-- Send the papers to me by Friday, Nov. 12th (pablo.raguet@inrae.fr), I will choose 1 of those papers for you to prepare a critique 
+- Send the papers to me by Thursday, Nov. 10th (pablo.raguet@inrae.fr), I will choose 1 of those papers for you to prepare a critique 
 
--	On Monday, Nov. 29th, give a 12min presentation and answer 5-10min of questions (T. Maxwell)
+-	On Monday, Nov. 24th, give a 12min presentation and answer 5-10min of questions (P. Raguet)
 
 ---
 

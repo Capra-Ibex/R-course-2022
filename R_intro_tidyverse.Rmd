@@ -13,6 +13,14 @@ output:
 
 ---
 
+```{r loading PKG, echo=FALSE, include=FALSE}
+library(gridExtra)
+library(ggplot2)
+library(grid)
+library(png)
+library(tidyverse)
+```
+
 ```{r, include = F}
 # this is the session info, it gives information on which packages and which versions were used when creating these slides
 # do not run these lines, as they are the output of the function sessionInfo()
@@ -54,7 +62,7 @@ output:
 
 
 layout: true
-background-image: url(images/logos_new.png)
+background-image: url(Images/logos_new.png)
 background-position: 50% 100%
 background-size: 30%
 
@@ -69,7 +77,7 @@ background-size: 30%
 
 
 ```{r cycle, echo = FALSE, out.width = '40%',fig.align = "center"}
-knitr::include_graphics("images/week1/CycleP_simple3_EN-page002.png")
+knitr::include_graphics("Images/week1/CycleP_simple3_EN-page002.png")
 ```
 
 
@@ -78,7 +86,7 @@ knitr::include_graphics("images/week1/CycleP_simple3_EN-page002.png")
 ## 
 
 ```{r intro pic, echo=FALSE, fig.cap="", out.width = '60%',fig.align = "center"}
-knitr::include_graphics("images/week1/r_first_then.png")
+knitr::include_graphics("Images/week1/r_first_then.png")
 ```
 <center> @allison_horst </center>
 
@@ -112,7 +120,7 @@ knitr::include_graphics("images/week1/r_first_then.png")
 - When you see this symbol, you use code to answer a question that I've stated:
 
 ```{r, echo=FALSE, fig.cap="", out.width = '25%',fig.align = "left"}
-knitr::include_graphics("images/week1/exercise_smaller.png")
+knitr::include_graphics("Images/week1/exercise_smaller.png")
 ```
 
 - Don't hesitate to ask questions  
@@ -130,7 +138,7 @@ class: center, middle
 ---
 
 layout: true
-background-image: url(images/logos_new.png)
+background-image: url(Images/logos_new.png)
 background-position: 50% 100%
 background-size: 30%
 
@@ -145,7 +153,7 @@ R is open source, which means there are plenty of great solutions to issues that
 --
 
 ```{r why r pic, echo=FALSE, fig.cap="", out.width = '80%',fig.align = "center"}
-knitr::include_graphics("images/week1/the_why_r_plot.png")
+knitr::include_graphics("Images/week1/the_why_r_plot.png")
 ```
 <center> @CSBQ </center>
 
@@ -153,11 +161,13 @@ knitr::include_graphics("images/week1/the_why_r_plot.png")
 ---
 ## Let's get started
 
-Open Rstudio, click on:  
+**Step 1:** Create a new folder for the R course
+
+**Step 2:** Open Rstudio, click on:  
 
 <center> File → New File → R Script </center>
 
-Save the R Script with an easy-to-find name
+**Step 3:** Save the R Script with an easy-to-find name in the new-created folder
 
 <br> 
 
@@ -175,7 +185,7 @@ Save the R Script with an easy-to-find name
 ## Explore R Studio
 
 ```{r rstudio, echo=FALSE, fig.cap="", out.width = '100%',fig.align = "center"}
-knitr::include_graphics("images/week1/Rstudio.png")
+knitr::include_graphics("Images/week1/Rstudio.png")
 ```
 
 **Tip:** you can change the colors of RStudio in 
@@ -190,11 +200,10 @@ knitr::include_graphics("images/week1/Rstudio.png")
 We use the `setwd()` function so that R knows where to look for the data table. We can use `getwd()` to see in which directory we currently are.
 
 ```{r setwd}
-getwd()
+# getwd()
 ```
 
 --
-
 
 **Tip:** manually set your directory by clicking
 
@@ -209,41 +218,76 @@ Copy-paste the output from the R console into your script so that you only need 
 ---
 ## Saved by the R project
 
-- .Rproj file
-- All your project inside a folder
-- Relative path
-- code reproductivity
-- Git use
+<center> Go up-left or up-right → Create new project → Choose Directory </center>
+
+**Advantages:**
+- All your scripts, data, table and figure in one folder
+- Relative path for working directory
+- Code reproducibility
+- Allow to use Git for code versioning (advanced use)
+
+--
+
+**Give it a try:**
+
+```{r}
+getwd()
+```
 
 ---
 
 ## Renv the package manager
 
-- local save of packages and their version
-- limit code break due to package update
+Within a open R project:
+
+<center> Tools → Project Options → Environments → Tick *use renv* </center>
+
+**Advantages:**
+
+- Local save of packages and their versions
+- Limit code break due to package update
+
+--
+
+**Tips:**
+
+Some renv functions (call: `renv::function()`):
+
+| Function | effects  | Function | effects | 
+|---| ---  | --- | ---  |
+| activate() | activate renv | upgrade() | upgrade renv version |
+| install() | install a package | update()  | update packages |
+| snapshot() | save packages versions | restore()   | restore packages version | 
 
 ---
 
-## Tips for Rproj
+## Structure your R project
 
-### Structure your path
-- Folders "data", "Export"
-- names your scripts starting by a number (01)
-- tell to another coder which script should be run first
+**Arrange your R scripts and folders:**
+- Name your scripts starting by a number (example: 01_name.R)
 
-### Structure your code
-- Head
+Tells you which script to run first !
+
+- Examples of folders "Data", "Export", "Export/Figure"
+
+--
+
+**Structure your code:**
+- Header
 - Working directory check
-- loading packages (next slide)
-- data import (further slide)
-- Divide your code in parts and eventually in different scripts
-  - Data manipulation
-  - Statistics
-  - Graphics
-  - Exportation
+- Loading packages (next slide)
+- Data import (further slide)
+- Divide your code in parts
 
-Tips: create a separate .R script for function
- call by `source("name_of_fun_file.R")`
+--
+
+**Tips (dispensable):** 
+
+- create a separate .R script for functions (`source("name_of_fun_file.R")`)
+- Use the snippets for automatic code: copy/paste the Snippet.txt in
+
+<center> Tools → Edit Code Snippets </center>
+
 ---
 ## Loading the necessary package(s)
 
@@ -251,17 +295,20 @@ If you have not yet installed the metapackage `tidyverse`, you can do by clickin
 
 <center> Packages → Install, and typing the package name </center>
 
-Or, you can run it in your script without the #
+You can also run it in your script without the `#`:
 ```{r}
 # install.packages("tidyverse")
 ```
-
+Or
+```{r}
+# renv::install("tidyverse")
+```
 --
 
 You need to tell R where to look in its library for the packages you will use in your script.
 
 ```{r}
-library(tidyverse)
+# library(tidyverse)
 ```
 
 **Tip:** At the beginning of each script, only include the libraries which you will actually use. 
@@ -271,7 +318,7 @@ library(tidyverse)
 ## R as a calculator
 
 ```{r, echo=FALSE, fig.cap="", out.width = '25%',fig.align = "left"}
-knitr::include_graphics("images/week1/exercise_smaller.png")
+knitr::include_graphics("Images/week1/exercise_smaller.png")
 ```
 Type the following in your script and execute your code:
 
@@ -313,7 +360,7 @@ var2 <- 2+3
 
 <br>
 ```{r, echo=FALSE, fig.cap="", out.width = '25%',fig.align = "left"}
-knitr::include_graphics("images/week1/exercise_smaller.png")
+knitr::include_graphics("Images/week1/exercise_smaller.png")
 ```
 Create a new variable which is the multiplication of var1 and var2
 
@@ -405,6 +452,15 @@ Some useful arithmetic function:
 | sd() | standard deviation | ? |  standard error  | 
 
 ---
+
+layout: false
+
+class: center, middle
+
+## Advanced used of functions in R
+
+---
+
 ## Build your own function (1)
 
 Create an object with the `function()` function. Example for coefficient of variation:
@@ -423,7 +479,7 @@ Fun.cv(var5)
 
 --
 
-Usefull functions to build your own function:
+Useful functions to build your own function:
 
 | Function | Effect  | Function | Effect  |
 | --- | ---  | ---  | ---  |
@@ -433,7 +489,7 @@ Usefull functions to build your own function:
 ---
 ## Build your own function (2)
 ```{r, echo=FALSE, fig.cap="", out.width = '25%',fig.align = "left"}
-knitr::include_graphics("images/week1/exercise_smaller.png")
+knitr::include_graphics("Images/week1/exercise_smaller.png")
 ```
 The standard error function does not exist in R, how would you build that function ?
 
@@ -484,7 +540,7 @@ Fun.se.2(var5)
 ## Data structures in R
 
 ```{r data structure pic, echo=FALSE, fig.cap="", out.width = '80%',fig.align = "center"}
-knitr::include_graphics("images/week1/data_structure.png")
+knitr::include_graphics("Images/week1/data_structure.png")
 ```
 
 ---
@@ -492,7 +548,7 @@ knitr::include_graphics("images/week1/data_structure.png")
 ## Let's create a data frame from scratch
 
 ```{r, echo=FALSE, fig.cap="", out.width = '25%',fig.align = "left"}
-knitr::include_graphics("images/week1/exercise_smaller.png")
+knitr::include_graphics("Images/week1/exercise_smaller.png")
 ```
 **Step 1:** Create vectors 
 
@@ -541,8 +597,10 @@ list[[`element`]]
 
 `plant_data[ ,3]` → Extracts the third column
 
+--
+
 ```{r, echo=FALSE, fig.cap="", out.width = '25%',fig.align = "left"}
-knitr::include_graphics("images/week1/exercise_smaller.png")
+knitr::include_graphics("Images/week1/exercise_smaller.png")
 ```
 
 Extract the second value from the third column
@@ -583,7 +641,7 @@ plant_data_reduced2
 ## Your turn
 
 ```{r, echo=FALSE, fig.cap="", out.width = '25%',fig.align = "left"}
-knitr::include_graphics("images/week1/exercise_smaller.png")
+knitr::include_graphics("Images/week1/exercise_smaller.png")
 ```
 
 
@@ -638,18 +696,13 @@ class: center, middle
 ## Tidy data: using the `tidyverse` metapackage
 
 ```{r, echo=FALSE, fig.cap="", out.width = '60%',fig.align = "center"}
-library(gridExtra)
-library(ggplot2)
-library(grid)
-library(png)
-
-p0 <- readPNG("images/week1/dplyrsticker.png")
-p1 <- readPNG("images/week1/ggplot.png")
-p2 <- readPNG("images/week1/forcats.png")
-p3 <- readPNG("images/week1/purrr.png")
-p4 <- readPNG("images/week1/tidyr.png")
-p5 <- readPNG("images/week1/stringr.png")
-p6 <- readPNG("images/week1/readr.png")
+p0 <- readPNG("Images/week1/dplyrsticker.png")
+p1 <- readPNG("Images/week1/ggplot.png")
+p2 <- readPNG("Images/week1/forcats.png")
+p3 <- readPNG("Images/week1/purrr.png")
+p4 <- readPNG("Images/week1/tidyr.png")
+p5 <- readPNG("Images/week1/stringr.png")
+p6 <- readPNG("Images/week1/readr.png")
 
 g0 <- rasterGrob(p0)
 g1 <- rasterGrob(p1)
@@ -666,7 +719,7 @@ grid.arrange(g0,g1, g2, g3, g4, g5, g6, ncol = 3)
 ---
 
 layout: true
-background-image: url(images/logos_new.png)
+background-image: url(Images/logos_new.png)
 background-position: 50% 100%
 background-size: 30%
 
@@ -712,7 +765,7 @@ This is what we call 'tidy data' or 'long format'.
 
 
 ```{r tidy pic, echo=FALSE, fig.cap="", out.width = '110%',fig.align = "center"}
-knitr::include_graphics("images/week1/tidydata_1.jpg")
+knitr::include_graphics("Images/week1/tidydata_1.jpg")
 ```
 <center> @allison_horst </center>
 
@@ -727,7 +780,7 @@ knitr::include_graphics("images/week1/tidydata_1.jpg")
 - Moving from Excel to R for all calculations : reproducible 
 
 ```{r tidy pic 2, echo=FALSE, fig.cap="", out.width = '80%',fig.align = "center"}
-knitr::include_graphics("images/week1/tidydata_2.jpg")
+knitr::include_graphics("Images/week1/tidydata_2.jpg")
 ```
 <center> @allison_horst </center>
 
@@ -741,7 +794,7 @@ If data is under Excel file format, save as a .csv or a .txt file.
 We use the `read.table()` function. The "sep" (separator) will likely be different whether you are importing a .csv or a .txt file.
 
 ```{r}
-data_co2 <- read.table("Exemple/CO2_data_fromR.txt", header = TRUE, sep = "\t")
+data_co2 <- read.table("Data/Exemple/CO2_data_fromR.txt", header = TRUE, sep = "\t")
 ```
 
 - The dataset shows results of an experiment on the cold tolerance of grass. 
@@ -792,11 +845,14 @@ Let's say we want to make the ID number a **factor**, we can use the `as.factor(
 --
 
 ```{r}
-#testing the as.factor() function
+# testing the as.factor() function
 # data_co2$ID <- as.factor(data_co2$ID)
 ```
 <br> 
-Note: Similarly, you can make a factor as a numeric value with `as.numeric()`. 
+
+Similarly, you can make a factor as a numeric value with:
+
+`as.numeric()`, `as.character()`, `as.integer()`, etc. 
 ---
 
 ## More useful functions
@@ -831,7 +887,9 @@ Because this data table is 'tidy', we can use `dplyr` for such data manipulation
                       function 2 
                       etc... 
 
-This reads: "Make a new data table, where you take my data table, apply function 1 to it, and then apply function 2 to the new subset made by function 1 "
+This reads: 
+
+"Make a new data table, where you take my data table, apply function 1 to it, and then apply function 2 to the new subset made by function 1 "
 
 ---
 ## Example: means per group 
@@ -851,7 +909,7 @@ data_co2_means
 --
 
 ```{r, echo=FALSE, fig.cap="", out.width = '25%',fig.align = "left"}
-knitr::include_graphics("images/week1/exercise_smaller.png")
+knitr::include_graphics("Images/week1/exercise_smaller.png")
 ```
 Make a new data table in which you calculate the mean of the CO2 uptake per plant Type (Quebec vs. Mississippi)  
 
@@ -873,20 +931,26 @@ data_co2_means_type
 #Challenge: means, se, n per group
 
 ```{r, echo=FALSE, fig.cap="", out.width = '25%',fig.align = "left"}
-knitr::include_graphics("images/week1/exercise_smaller.png")
+knitr::include_graphics("Images/week1/exercise_smaller.png")
 ```
 Make a new data table in which you calculate the number of variables per observation (n), mean, and standard error of uptake per plant Type (Quebec vs. Mississippi)  
 
-Hint: use the `summarise_each()` and the `funs()` function: 
+**Hint:** use the `summarise_at()` and the `funs()` function: 
 
-<center> summarise_each(funs(n = n(), mean = mean(.), se = sd(.)/sqrt(n())), "uptake") </center>
+<center> summarise_at(c("uptake"), 
+                      list(N = ~n(), 
+                          Mean = ~mean(.), 
+                          SE = ~(sd(.)/sqrt(n())))) </center>
 
 --
 
 ```{r}
-data_co2_means_se<- data_co2 %>%
+data_co2_means_se <- data_co2 %>%
   group_by(Type) %>%
-  summarise_each(funs(n = n(), mean = mean(.), se = sd(.)/sqrt(n())), "uptake")
+  summarise_at(c("uptake"),
+               list(N = ~n(),
+                    Mean = ~mean(.),
+                    SE = ~(sd(.)/sqrt(n()))))
 data_co2_means_se  
 ```
 
@@ -912,7 +976,7 @@ x %>% f(y)is the same as f(x, y),
 ## Filtering a data table
 
 ```{r filter pic, echo=FALSE, fig.cap="", out.width = '100%',fig.align = "center"}
-knitr::include_graphics("images/week1/dplyr_filter.jpg")
+knitr::include_graphics("Images/week1/dplyr_filter.jpg")
 ```
 <center>@allison_horst</center>
 
@@ -922,12 +986,12 @@ knitr::include_graphics("images/week1/dplyr_filter.jpg")
 ## Your turn
 
 ```{r, echo=FALSE, fig.cap="", out.width = '30%',fig.align = "left"}
-knitr::include_graphics("images/week1/exercise_smaller.png")
+knitr::include_graphics("Images/week1/exercise_smaller.png")
 ```
 
 Using the previous tutorial, filter the data table for the nonchilled treatment in Quebec? 
 
-Hint: 
+**Hint:** 
 
       new_df <- dplyr:: filter(df, ...)  is the same as 
       new_df<- df %>%
@@ -950,24 +1014,39 @@ And what if we want to directly find the n, mean, and standard error?
 ```{r}
 quebec_nonchilled_mean<- data_co2 %>%
   filter(Type == "Quebec" & Treatment == "nonchilled") %>%
-  summarise_each(funs( n = n(), mean = mean(.), se = sd(.)/sqrt(n())), "uptake")
+  summarise_at(c("uptake"),
+               list(N = ~n(),
+                    Mean = ~mean(.),
+                    SE = ~(sd(.)/sqrt(n()))))
 quebec_nonchilled_mean
 ```
 
 ---
 
-## Logics in R 
+## Logics and relations in R 
 
-|Character|| Character||
+Can be used within the functions (i.e. when using `filter()`)
+
+| Character | Logics | Character | Relations |
 |---|---|---|---|
-| < | Less than | > | Greater than |
-| != | Not equal to | == | Equal to |
-| is.na |Is NA | !is.na |Is not NA |
-| <= |Less than or equal to | >= |Greater than or equal to
-|%in% |Group membership | 
-| &| and| I | or
+| == | Less than | < | Less than |
+| != | Not equal to | > | Greater than |
+| &  | and | >= |Greater than or equal to |
+| I  | or | <= | Less than or equal to |
 
-This can be used within the functions (i.e. when using `filter()`)
+--
+
+Other logics:
+
+- `is.na()`: is NA (and other is.something() operators)
+- `%in%`: group membership
+- `!`: opposition (e.g. `!si.na()`: is not NA)
+
+--
+
+Useful function:
+- `which()`
+- `grep()`, `grepl()` and orther regexpr functions
 
 ---
 
@@ -975,14 +1054,14 @@ This can be used within the functions (i.e. when using `filter()`)
 
 
 ```{r, echo=FALSE, fig.cap="", out.width = '30%',fig.align = "left"}
-knitr::include_graphics("images/week1/exercise_smaller.png")
+knitr::include_graphics("Images/week1/exercise_smaller.png")
 ```
 Pick one or both questions, and use the appropriate function to answer them: 
 
 1. What is the mean `uptake` for each treatment type, for concentration values greater than or equal to 350?
 
 2. Add a new column to the data frame, which multiplies the `conc` by the `uptake`
-Hint: use the `mutate()` function 
+**Hint:** use the `mutate()` function 
 
 <br>
 
@@ -994,19 +1073,19 @@ https://rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf
 ## Answers
 
 ```{r, warning = F, message = F}
-#question 1: mean uptake for each treatment type, 
-#for concentration values greater than or equal to 350?
+# question 1: mean uptake for each treatment type, 
+# for concentration values greater than or equal to 350?
 treat_above350 <- data_co2 %>%
   filter(conc >= 350) %>%
   group_by(Treatment) %>%
   summarise(mean = mean(uptake))
 treat_above350
 
-#question 2: add a new column to the data frame
-#which multiplies the `conc` by the `uptake`
+# question 2: add a new column to the data frame
+# which multiplies the `conc` by the `uptake`
 data_co2 <- data_co2 %>%
   mutate(mult = conc*uptake)
-head(data_co2)
+head(data_co2, 3)
 ```
 
 ---
@@ -1014,11 +1093,11 @@ head(data_co2)
 ## So how does R compare to Excel? 
 
 ```{r dino pic, echo=FALSE, fig.cap="", out.width = '60%',fig.align = "center"}
-knitr::include_graphics("images/week1/excel_dinosaur.png")
+knitr::include_graphics("Images/week1/excel_dinosaur.png")
 ```
 <center> @dinosaur </center>
 
-Manipulating data in R is reproducible and tracable, which means it is less prone to user errors.  
+Manipulating data in R is reproducible and traceable, which means it is less prone to user errors.  
 
 ---
 
@@ -1045,9 +1124,9 @@ https://seananderson.ca/2014/09/13/dplyr-intro/
 
 -	In pairs (groups of 2), select 2 papers which use linear regressions, ANOVAs and/or mixed models in their statistical analyses (we will go through these in class)
 
-- Send the papers to me by Friday, Nov. 12th (pablo.raguet@inrae.fr), I will choose 1 of those papers for you to prepare a critique 
+- Send the papers to me by Thursday, Nov. 10th (pablo.raguet@inrae.fr), I will choose 1 of those papers for you to prepare a critique 
 
--	On Monday, Nov. 29th, give a 12min presentation and answer 5-10min of questions (T. Maxwell)
+-	On Monday, Nov. 24th, give a 12min presentation and answer 5-10min of questions (P. Raguet)
 
 ---
 
