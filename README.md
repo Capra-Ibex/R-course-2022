@@ -7,7 +7,7 @@ Course taught in 4 parts:
 
 Tania and I created the slides using [xarigan](https://github.com/yihui/xaringan) and the [R-ladies css](https://github.com/rladies/resources/blob/master/xaringan-slides/how_to_use.md). The PDFs were generated from html files using the following code: `pagedown::chrome_print("test.html",output="test.pdf")`
 or
-`pagedown::decktape("test.html", "test.pdf", docker = TRUE)`.
+`xaringan::decktape("test.html", "test.pdf", docker = TRUE)`.
 
 Slides were inspired by the [QCBS R Workshop Series](https://r.qcbs.ca/). Several images are credited to [Allison Horst](https://github.com/allisonhorst), check out her cool R artwork! 
 

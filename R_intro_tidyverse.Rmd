@@ -1,7 +1,7 @@
 ---
 title: "R basics and the tidyverse "
 subtitle: "Session 1 LOVE'R course"
-author: "Pablo Raguet <br> email: pablo.raguet@inrae.fr <br> <br> <br> original teacher: Tania L. Maxwell <br> website: tania-maxwell.github.io"
+author: "Pablo Raguet <br><br> email: pablo.raguet@inrae.fr <br> github: Capra-Ibex/R-course-2022 <br> <br> <br> original teacher: Tania L. Maxwell <br> website: tania-maxwell.github.io"
 
 date: '07-11-2022'
 output:
