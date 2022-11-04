@@ -1036,17 +1036,17 @@ Can be used within the functions (i.e. when using `filter()`)
 
 --
 
-Other logics:
+Some other logics:
 
 - `is.na()`: is NA (and other is.something() operators)
 - `%in%`: group membership
-- `!`: opposition (e.g. `!si.na()`: is not NA)
+- `!`: negation (e.g. `!si.na()`: is not NA)
 
 --
 
 Useful function:
 - `which()`
-- `grep()`, `grepl()` and orther regexpr functions
+- `grep()`, `grepl()` and other regexpr functions
 
 ---
 
@@ -1118,6 +1118,7 @@ https://cran.r-project.org/doc/contrib/Baggott-refcard-v2.pdf
 - Other useful websites for using dplyr:
 https://rpubs.com/bradleyboehmke/data_wrangling 
 https://seananderson.ca/2014/09/13/dplyr-intro/ 
+https://www.tidyverse.org/
 
 ---
 ## Group project
@@ -1152,4 +1153,4 @@ layout: false
 
 class: center, middle
 
-## Next week: choosing your statistical test
+## Next session: choosing your statistical test
