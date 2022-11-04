@@ -11,4 +11,4 @@ or
 
 Slides were inspired by the [QCBS R Workshop Series](https://r.qcbs.ca/). Several images are credited to [Allison Horst](https://github.com/allisonhorst), check out her cool R artwork! 
 
-Please message me on Twitter if you find some mistakes: @tania_maxwell7
+Please message me by e-mail if you find some mistakes.
