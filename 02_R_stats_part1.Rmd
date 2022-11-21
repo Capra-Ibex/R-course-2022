@@ -80,13 +80,13 @@ Examples:
 
 2. What is the effect of the plant height on the grain yield?
 
-3. What is the effect of the plant height and tassel height on the grain number?
+3. What is the effect of the plant height and silking on the grain yield?
 
-4. What is the effect of the water treatment on plant height? 
+4. What is the effect of the maize variety on plant height?
 
-5. What is the effect of the water treatment and the varity ID on grain weight
+5. What is the effect of the water treatment and the varity ID on grain weight?
 
-6. What are the effect of the grazing treatment and roots length on fruit production? 
+6. What are the effect of the grazing treatment and roots length on fruit production? (grazed dataset)
 
 ---
 
@@ -742,7 +742,7 @@ layout: false
 
 class: center, middle
 
-## Question 3: What is the effect of the plant height and tassel height on the grain number? 
+## Question 3: What is the effect of the plant height and silking on the grain yield? 
 
 ---
 
@@ -828,7 +828,7 @@ layout: false
 
 class: center, middle
 
-## Question 4: What is the effect of the water treatment on plant height? 
+## Question 4: What is the effect of the maize variety on plant height? 
 
 ---
 
@@ -968,7 +968,7 @@ layout: false
 
 class: center, middle
 
-## Question 5: What is the effect of the water treatment and the maize variety on grain weight? 
+## Question 5: What is the effect of the water treatment and the varity ID on grain weight? 
 
 ---
 
@@ -1386,9 +1386,6 @@ In groups of 2:
 - Pseudoreplication
 
 - Heritability
-
-- (Introduction to non-linear models and generalized additive models)
-
 
 ---
 

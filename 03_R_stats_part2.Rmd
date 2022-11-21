@@ -1,0 +1,1195 @@
+---
+title: "Statistical testing "
+subtitle: "Session 3 LOVE'R course"
+author: "Pablo Raguet <br><br> email: pablo.raguet@inrae.fr <br> github: Capra-Ibex/R-course-2022 <br> <br> <br> original teacher: Tania L. Maxwell <br> website: tania-maxwell.github.io"
+
+date: '14-11-2022'
+output:
+  xaringan::moon_reader:
+    css: ["default", "rladies", "rladies-fonts"]
+    nature:
+      countIncrementalSlides: false
+
+---
+
+layout: true
+background-image: url(Images/logos_new.png)
+background-position: 50% 100%
+background-size: 30%
+
+---
+
+## Load the packages libraries
+
+```{r load, message=FALSE}
+library(tidyverse)
+library(multcomp)
+library(MuMIn)
+library(lme4)
+library(nlme)
+
+# not necesary in R project
+# dir <- getwd()
+# setwd(dir)
+
+```
+
+
+---
+
+## Topics for today
+
+Generalized Linear Models (GLM)
+
+- Link and Variance functions
+
+- Deviance
+
+- Over-dispersion
+
+--
+
+Linear Mixt Model (LMM)
+
+- Fixed vs. random effects
+
+- Pseudoreplication
+
+- Linear mixed effect models (LMMs)
+
+--
+
+Heritability
+
+---
+
+layout: false
+
+class: center, middle
+
+## Generalized Linear Models
+
+---
+
+layout: true
+background-image: url(Images/logos_new.png)
+background-position: 50% 100%
+background-size: 30%
+---
+
+## Dataset for GLM
+
+Import the `basketcuiller.csv` dataset:
+
+```{r}
+Baskspo <- read.csv2("Data/Exemple/basketcuiller.csv") %>% 
+  mutate_if(is.character, as.factor) %>% 
+  mutate(dist = as_factor(dist))
+```
+
+--
+
+Testing the ability to mark a bullet paper in trashcan according to:
+
+- **Distance** (6, 8, 10 or 12 tiles)
+- **Method** (hand or spoon)
+
+--
+
+Result :
+
+- Success/Failure
+
+--
+
+With **4** distances, **2** methods, **4** group, **2** shooters per group and **4** trials per shooter: $4\times2\times4\times2\times4 = 256$ evaluations.
+
+--
+
+Thanks to Sebastien Ibanez and the students from ECOMONT master at Savoie Mont-Blanc University (2017).
+
+---
+
+## Question: What is the influence of distance (and method) on succes ?
+
+--
+
+```{r, echo = FALSE, fig.align='center', fig.height=4.5, fig.width=8}
+Baskspo %>%
+  ggplot() +
+  geom_point(aes(y = ss, x = dist, fill = metho), alpha = 0.08,
+             shape = 21, position = position_dodge(width = 0.2),
+             size =3)+
+  labs(x = "Shooting distance (nbr of tiles)",
+       y = "P(success/Failure)") +
+  scale_fill_discrete(name = "Throwing method", 
+                      labels = c("Basket", "Spoon")) +
+  theme_bw() +
+  guides(fill = guide_legend(override.aes = list(alpha = 1))) +
+  theme(legend.position = c(0.8, 0.5),
+        legend.background = element_rect(colour = "black"),
+        axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12, colour = "black"),
+        legend.title = element_text(size = 14),
+        legend.text = element_text(size = 12))
+```
+
+--
+
+What can we see ?
+
+--
+
+- Distance seems to decrease success probability.
+- There is no clear effect of the method of throwing.
+
+---
+## Reminder: "classical" linear model
+
+$E(Y) = X\beta + \epsilon$
+
+$\beta$ is fitted by the **Ordinary Least Square** (OLS), reduce $\sum\epsilon^2$.
+
+--
+
+** $X$ the explanatory variables (predictors):**
+
+- Continuous = *regression*
+
+- Discrete = *ANOVA*
+
+- Discrete and continuous = *ANCOVA*
+
+--
+
+<br>**Assumptions:**
+
+1. Homogeneity (or homoscedasticity) of variances
+
+2. Normality of **residues** 
+
+3. No outliers
+
+4. Data are randomly selected and are independent
+
+---
+
+## "Classical" linear model limits
+
+Does not work in numerous situation. Here are three examples:
+
+--
+
+**Count data:**
+
+- Example: plant aboundance
+- residual variance increase with count
+- $Var(Y)$ increase with $E(Y)$
+- **Name:** <font color= "#562457FF"> Poisson </font>
+
+--
+
+**Fail/Success data:**
+
+- Example: presence/absence; win/lose; etc
+- $Var(Y)$ local gauss distribution with the two $E(Y)$
+- **Name:** <font color= "#562457FF"> Binomial </font>
+
+--
+
+**Survival data:**
+
+- Example: life span expectation
+- $Var(Y)$ increase faster than $E(Y)$
+- **Name:** <font color= "#562457FF"> Gamma </font>
+
+---
+
+## Math details
+
+GLM general equation:
+
+$E(Y) = g^{-1}(X\beta) + \epsilon$
+
+<font color="#562457FF"> g </font> the link function (e.g. $g(Y) = X\beta$ is the gaussian model) <br>
+<font color="#562457FF"> g </font> allow to calculate the predictions from the linear model.
+
+--
+
+| Distribution | Example | Name | $g$ | $g^{-1}$ |
+|--------------|---------|-----------|---|-----|
+| Normal | Continuous measure | identity | $X\beta = \mu$ | $\mu = X\beta$ |
+| Poisson | Count | log | $X\beta = \log(\mu)$ | $\mu = e^{X\beta}$ |
+| Binomial | Nbr: successes/failures | logit | $X\beta = \log(\frac{\mu}{1-\mu})$ | $\mu = \frac{e^{X\beta}}{1+e^{X\beta}}$ |
+| Gamma | life span expectation | Inverse | $X\beta = \frac{1}{\mu}$ | $\mu = \frac{1}{X\beta}$ |
+
+---
+
+## GLM assumptions
+
+Less assumptions than gaussian linear model:
+
+--
+
+1. Data are randomly selected and are independent
+
+2. No outliers
+
+--
+
+<br>No assumptions on residuals normality:
+
+- Estimate with **Maximum Likelihood** (ML), not OLS <br>
+= Probability to observe $Y$ with the model parameters by iterative process <br>
+= often `log`: log-likelihood or log-like.
+
+--
+
+<br>No assumptions on homoscedasticity:
+
+- $Var(Y)$ is related to $E(Y)$.
+- $Var(Y) = constant \times V(E(Y))$
+- $V$ is the function of variance
+
+---
+
+## Additionnal math details: function of variance
+
+| Distribution | Writing format | Mean $E(Y)$ | Variance $Var(Y)$ | Function V |
+|--------------|---------|-----------|---|-----|
+| Normal | $N(\mu, \sigma)$ | $\mu$ | $\sigma$ | 1 |
+| Poisson | $P(\lambda)$ | $\lambda$ | $\lambda$ | $\lambda$ |
+| Binomial | $B(n, p)$ | $E(\frac{Y}{n}) = p$ | $Var(\frac{Y}{n}) = \frac{p\times(1-p)}{n}$ | $p\times(1-p)$ |
+| Gamma | $\Gamma(\mu, k)$ | $\mu$ | $\frac{\mu^2}{k}$ | $\mu^2$ |
+
+---
+
+## Using the `glm()` function 
+
+--
+
+In the Basket/Spoon data, it was a Success/Failure experiment: **Binomial data**.
+
+--
+
+```{r}
+modg <- glm(ss ~ dist, Baskspo, family = "binomial")
+summary(modg)
+```
+
+---
+
+## How estimates are calculated
+
+**Use the g function.**
+
+--
+
+Exemple with the binomial law.
+
+.pull-left[
+Average success for each distance:
+```{r}
+Average <- Baskspo %>% 
+  group_by(dist) %>% 
+  summarise(Mean = mean(ss))
+Average
+```
+]
+
+--
+
+.pull-right[
+
+**Intercept** (Log odd): $\log(p/(1-p))$
+```{r}
+log(0.703125/(1-0.703125))
+modg$coefficients[1]
+```
+
+**Slope** (Log odd-ratio): $\log(\frac{p/(1-p)}{q/(1-q)})$
+
+With: $q = 1-p$
+
+]
+
+---
+
+## Model deviance
+
+Log-likelihood difference between our model and the saturated model.
+
+--
+
+*In a saturated model, there is one parameter per measurement (Df=0)*
+
+--
+
+.pull-left[
+### In all GLM
+
+$D^2 = 1-\frac{residual~deviance}{null~deviance}$
+
+- Total model deviance: `modg$null.deviance`
+```{r, echo=FALSE}
+modg$null.deviance
+```
+
+- Residual deviance: `modg$deviance`
+```{r, echo=FALSE}
+modg$deviance
+```
+
+$D^2$ = 
+```{r, echo=FALSE}
+1-(modg$deviance/modg$null.deviance)
+```
+]
+
+--
+
+.pull-right[
+### In Gaussian LM
+
+OLS $R^2$ is either:
+
+- **Data variability explained by the model**
+
+- Prediction improvement compared to null model
+
+- Correlation between observed and predicted values
+
+$R^2 = \frac{SS_{exp}}{SS_{tot}} = 1-\frac{SS_{res}}{SS_{tot}}$
+
+]
+
+---
+
+## Over dispersion
+
+Model deviance follow a $\chi^2$ law:
+
+- $D = \sum_{i=1}^{n} d_i$
+
+- We should observe: $D_{res} = Df_{res}$
+
+--
+
+<br><br>If $D_{res} >> Df_{res}$: **Over dispersion**
+
+---
+
+## Solution for over dispersion
+
+Why over dispersion:
+
+- Important predictors not inclued
+
+- Wrong link function (actual $Y$ distribution =/ from real)
+
+- Outliers
+
+--
+
+<br><br>Instead of Maximum Likelihood: **Quasi Maximum Likelihood**
+
+--
+
+<br><br>In `family=` argument: `"quasi..."`
+
+---
+
+layout: false
+
+class: center, middle
+
+## Linear Mixt Effects Models
+
+---
+
+layout: true
+background-image: url(Images/logos_new.png)
+background-position: 50% 100%
+background-size: 30%
+---
+
+### Dataset: A multi-site experiment in a network of European fields for assessing the maize yield response to environmental scenarios
+
+Run the following script
+
+```{r, message = FALSE}
+maize_data <- read.table("Data/Maize_data/2a-GrainYield_components_Plot_level.csv", 
+                         header = T, sep = ",") %>% 
+  dplyr::select(-type)
+
+maize_data$year <- as.factor(maize_data$year)
+maize_data$Replicate <- as.factor(maize_data$Replicate)
+maize_data$block <- as.factor(maize_data$block)
+maize_data$Row <- as.factor(maize_data$Row)
+maize_data$Column <- as.factor(maize_data$Column)
+maize_data$Code_ID <- as.factor(maize_data$Code_ID)
+maize_data$Variety_ID <- as.factor(maize_data$Variety_ID)
+
+```
+
+---
+
+```{r}
+# colnames(maize_data)
+# maize_data$Accession
+# glm()
+
+
+```
+
+---
+
+## Research question: 
+
+Previous question (N°.5) we answered with a tow-ways ANOVA: What is the effect of the water treatment and Variety ID `HMV5422`,`11430`, and `F712`, on grain weight in 2012? 
+
+We had found that the watered grain weights were significantly different to the the rainfed, and that Variety `HMV5422` produced significantly higher grain weights than Variety `11430` in 2012. 
+
+--
+
+Now, let's broaden the research question. What is the effect of the treatment on grain weight in the entire experiment? 
+
+How do we take into account the fact that the observations came from different sites? years? 
+
+--
+
+We can use a mixed-effect model using these variables as **random effects**. 
+
+---
+## Data structure
+
+```{r}
+str(maize_data)
+```
+
+---
+
+## Let's remove NA values from the grain.weight column
+
+```{r, echo=FALSE, fig.cap="", out.width = '25%',fig.align = "left"}
+knitr::include_graphics("Images/week1/exercise_smaller.png")
+```
+
+
+**Hint:** use the piping %>% and the `drop_na()` function.
+--
+
+```{r}
+maize_data <- maize_data %>%
+  drop_na(grain.weight)
+  
+```
+
+---
+
+## Fixed vs random effect
+
+**Fixed effect**: <br> 
+When the researcher decides the treatments which will be tested.<br>
+
+- ex: effect of three specific varieties on plant variety, to know which variety will produce the tallest plants
+
+- In most studies, the effects are fixed. 
+
+--
+
+**Random effect**: <br>
+Due design constraints, the researcher randomly selects treatments (e.g. plots, individuals, etc) that will be studied, among all of the available treatments.<br>
+
+- Random effect affect $Y$ variance
+
+- ex: effect of the plant variety on grain weight (here, the researcher randomly selects different varieties)
+
+- Here, we are interested in the variability between different varieties, as opposed to specific differences between three Varieties 
+
+---
+
+## What's the difference then? 
+
+The difference between fixed and random effects is in the interpretation.
+
+- For a fixed effect, the conclusion is applicable to the treatments studied in the experiment (i.e. Varieties `HMV5422`, `11430` and `F712`)
+
+- For a random effect, the conclusion is applicable to all of the Varieties 
+
+<br> 
+
+We also calculate the ANOVA table differently - the denominator used to calculate the F-ratio for the test differs if a factor is random or fixed 
+
+---
+## Random effects continued
+
+Random effects can also be used to take into account your data structure and statistical independence. 
+
+- For example, observations from the same site and the same year are more similar than from a different site or year. 
+
+They allow us to take into account pseudoreplication to ensure statistical independence for our observations.
+
+---
+
+## Pseudoreplication
+
+Important paper for experimental set-up: Hurlbert, S. H. (1984). Pseudoreplication and the design of ecological field experiments. Ecological monographs, 54(2), 187-211. 
+
+Three main types of pseudoreplication: 
+
+- simple
+
+- sacrificial 
+
+- temporal
+
+---
+## Simple pseudoreplication
+
+```{r , echo=FALSE, fig.cap="", out.width = '50%',fig.align = "center"}
+knitr::include_graphics("Images/week3/simple.png")
+```
+<center> Hurlbert et al. 1984, Ecological Monographs </center>
+
+- When there are several observations but only 1 experimental unit per treatment (i.e. if there was only one site with watered vs rainfed, and we took several observations of grain weight in each treatment)
+
+- Here, the observations are not independent
+
+--
+
+**Solution:**
+
+- Increase the number of experimental units. This is usually done by having several 'blocks' of each watered and rainfed treatments (in this experiment, there were 2 watered and 3 rainfed experimental units)
+
+---
+## Sacrificial pseudoreplication 
+
+```{r , echo=FALSE, fig.cap="", out.width = '50%',fig.align = "center"}
+knitr::include_graphics("Images/week3/sacrificial.png")
+```
+<center> Hurlbert et al. 1984, Ecological Monographs </center>
+
+- When there are several observations on an single experimental unit, and/or 
+
+- When you combine the data in one analysis without taking into account their origin (i.e. combining data, justifying that "there were no difference between sites so we combined them in one analysis)
+
+--
+
+**Solution:**
+
+- Use a mean of the observations on one experimental unit in the model, or
+
+- Use a model which takes into account the strucutre that there are observations within an experimental unit (i.e. using random effects)
+---
+
+## Temporal pseudoreplication
+```{r , echo=FALSE, fig.cap="", out.width = '40%',fig.align = "center"}
+knitr::include_graphics("Images/week3/temporal.png")
+```
+
+- When you take several measurements on a single experimental unit (i.e. measuring the grain weight once a month), and that you consider these measurements to be independent 
+
+--
+
+**Solution:**
+
+- Analyse each the measurements from each month (or other time period) separately 
+
+- Use a model which takes into account repeated measures (ANOVA for repeated measures, mixed models, etc. to take into account the autocorrelation between different measurements).
+
+--
+
+We will not go over these, but there plenty of resources online. 
+
+---
+
+## Linear Mixed Effect Models (LMM)
+
+Mixed effect models include a large variety of different models which allows us to correctly take into account the data structure (nested data/ grouping factors, repeated measurements, etc.)
+
+--
+
+Let's go back to our question for this week: is there an effect of the treatment on grain weight in our experiment (several sites, 2 years and 37 varieties)? 
+
+Why use a linear mixed effects model (LMM)?
+
+--
+
+- Here, we are interested in the general effect
+
+- The relationship may differ slightly among varieties due to unmeasured processes, or among experimental sites or year due to unmeasured environmental variables. We want to represent this data structure in our model. 
+
+---
+
+## Why choose a LMM?
+
+LMM are a balance between separating the dataset (per site, year, etc) and lumping the data together (i.e. not accounting for differences between the sites, etc)
+
+- Estimate slope and intercept parameters for each site and year (separating) but estimate fewer parameters than a classical regression.
+
+- Use all the data available (lumping) while accounting for pseudoreplication and controlling for differences among sites and years. 
+
+---
+
+## How do LMMs work? 
+
+- Intercepts and/or slopes are allowed to vary according to a given factor (i.e. random effect factor), such as site or year
+
+- Intercepts, slopes and their confidence interval are adjusted to take into account the data structure
+
+--
+<br>
+- LMM are gaussian models
+
+- GLMM also exist, you can 'combine' GLM and LMM
+
+---
+
+## Random intercept
+
+- It is assumed that the intercepts come from a normal distribution
+- Only need to estimate the mean (µ) and standard deviation of the normal distribution instead of the n intercepts (i.e. one for each site)
+
+
+```{r intercept pic, echo=FALSE, fig.cap="", out.width = '50%',fig.align = "center"}
+knitr::include_graphics("Images/week3/random_intercept2.png")
+```
+<center> Harrison et al. 2018, PeerJ </center>
+
+Note that the more levels your factor has, the more accurately the mean and standard deviation of the normal distribution will be estimated. 
+
+---
+
+## Random intercept
+
+Thus, the model only needs to estimate the mean and standard distribution of the intercepts, instead of the 29 intercepts (for sites)
+
+```{r , echo=FALSE, fig.cap="", out.width = '50%',fig.align = "center"}
+knitr::include_graphics("Images/week3/random_intercept2.png")
+```
+<center> Harrison et al. 2018, PeerJ </center>
+
+---
+
+## Random slope
+
+The same principle applies to slopes that vary according to a given factor (i.e. the random effect of site differs on the rainfed vs watered treatments) - only the mean and s.d. of the slopes are estimated. 
+
+```{r , echo=FALSE, fig.cap="", out.width = '50%',fig.align = "center"}
+knitr::include_graphics("Images/week3/random_slope.png")
+```
+<center> Harrison et al. 2018, PeerJ </center>
+
+Here, both intercepts and slopes are permitted to vary by group. Random slope models give the model far more flexibility to fit the data, but require a lot more data to obtain accurate estimates of separate slopes for each group.
+
+---
+## Taking into account the data structure 
+
+- If a certain site or year is poorly represented (not many values), the model will give more weight to the pooled model to estimate the intercept and slope of that site or year. 
+
+
+```{r , echo=FALSE, fig.cap="", out.width = '50%',fig.align = "center"}
+knitr::include_graphics("Images/week3/fig_12_w5.png")
+```
+<center> @CSBQ </center>
+
+---
+## Taking into account the data structure 
+
+The confidence intervals for the intercepts and slopes are adjusted to take account of the pseudo-replication-based on the **intraclass correlation coefficient (ICC)**
+
+**ICC:** How much variation is there in each group versus between groups?
+
+---
+
+## Interclass correlation coefficient (ICC)
+
+```{r , echo=FALSE, fig.cap="", out.width = '80%',fig.align = "center"}
+knitr::include_graphics("Images/week3/ICC.png")
+```
+
+--
+
+**High ICC** (low variation within group, and high variation among groups)
+- points are treated as single observation because they are correlated
+- small effective sample size
+- **large confidence intervals** for slope and intercept 
+
+--
+
+**Low ICC**
+- points coming from the same Variety are treated independently because they are little correlated
+- large effective sample size
+- **small confidence intervals** for slope and intercept 
+
+<center> @CSBQ </center>
+---
+## Data exploration
+
+Look at the distribution of samples for each factor level using the `table()` function or the `replications()` function:
+
+```{r, echo=FALSE, fig.cap="", out.width = '25%',fig.align = "left"}
+knitr::include_graphics("Images/week1/exercise_smaller.png")
+```
+
+--
+
+```{r}
+table(maize_data$Site)
+```
+
+.pull-left[
+```{r}
+table(maize_data$year)
+```
+]
+
+.pull-right[
+```{r}
+table(maize_data$treatment)
+```
+]
+
+---
+## Data exploration
+
+**Mixed-effect models can be used to analyze unbalanced experimental plans**
+
+--
+```{r, echo=FALSE, fig.cap="", out.width = '25%',fig.align = "left"}
+knitr::include_graphics("Images/week1/exercise_smaller.png")
+```
+
+Look at the distribution of the continuous variables using the `hist()` function
+
+--
+
+.pull-left[
+```{r, out.width = '70%',fig.align = "center"}
+hist(maize_data$grain.weight)
+```
+]
+
+.pull-right[
+Major deviations could cause heteroscedasticity problems. If necessary, make transformations. In this case, the data seems OK.
+
+]
+
+---
+
+## Data exploration
+
+Check for collinearity between your explanatory variables
+
+**Ex:** If we wanted to test the effect of grain weight and tassel height on grain yield. 
+
+--
+
+- The problem with collinear predictors is simply that they explain the same thing, so their effect on the response variable will be confounded in the model
+
+- In this example, there is no risk of collinearity with no continuous variables. If you had another continuous variable (Var2), one simple way to check for collinearity is:
+
+    `cor(var1, var2)`
+
+In the above example, it would be better to just include plant **or** tassel height on grain weight
+---
+## Setting up the model 
+
+Let's go back to our original question: what is the effect of treatment on the grain weight? 
+
+Which are our fixed effect factors? And our random factors? 
+
+--
+
+Fixed effects 
+- `treatment`: this is something we controlled and specifically want to test
+
+Random effects 
+- `Variety_ID`: here, we are interested in the **general** trend of Variety, not in specific differences between the chosen varieties. 
+- `Site` 
+- `year`
+- `Replicate` within the `treatment` / `year` / `Site`
+
+Depending on the research question, random effects could be fixed effects
+
+
+---
+
+## How to write an LMM in R?
+
+There are several packages which can be used: `lme4` or `nlme`. Today we will look at the `lmer()` (linear mixed model) function from the `lme4`package.
+
+```{r, warning = FALSE}
+mod_lmer <- lmer(grain.weight ~ treatment + 
+                   (1|Variety_ID) + (1|Site) + (1|year) +
+                   (1|Variety_ID:Site) + 
+                   (1|Variety_ID:year) + 
+                   (1|Variety_ID:treatment), 
+                 data = maize_data, REML = TRUE)
+```
+
+- `(1|Variety_ID)`: indicates varying intercept but keeping the same slope
+- `:` : indicates an interaction effect  
+- `REML = TRUE`: estimation method
+
+**Note:** Here we have **not** added the random effect (1|treatment/year/Site/Replicate) because the model fails to converge (too many parameters to estimate).
+
+---
+## Note on estimation methods
+
+REML (Restricted Maximum Likelihood) is the default method in `lmer`.
+
+--
+
+Note that the standard deviation estimator in the Maximum Likelihood (ML) is biased by a factor of (n−2)/n, especially on small dataset. The REML method corrects this bias.
+
+--
+<br><br>
+- We should compare nested random effect models with REML (such as `treatment/year/Site/Replicate`) <br><br>
+**Note:** REML takes into accounts the number of estimated parameters and loses 1 Df per parameter
+
+<br>
+- While we should compare nested fixed effects models with ML <br><br>
+**Note:** work only if the fixed effects are the same
+
+---
+
+## What if we wanted the slope of a random effect to vary? 
+
+Let's say that we think that the random effect of the site will be dependent on the water treatment (i.e. a site in southern Europe may influence grain.weight differently when rainfed than a northern site which receives more rain).
+
+```{r}
+mod_lmer2 <- lmer(grain.weight ~ treatment + 
+                   (1|Variety_ID) + (treatment|Site) + 
+                    (1|year) +
+                    (1|Variety_ID:Site) + 
+                    (1|Variety_ID:year) + 
+                    (1|Variety_ID:treatment), 
+                 data = maize_data, REML = TRUE)
+```
+
+We will continue with the previous model.
+
+---
+## A note on model selection
+
+The choice of the factors which are included in the model depends on the research question.
+
+However, to determine if you have built the best mixed model based on your prior knowledge, you should compare this *a priori* model to other alternative models
+
+With the dataset we are working on, there are several alternative models that might better fit the data.
+
+---
+
+## Model selection 
+
+We can see if our model compares to the basic linear model which does not include random factors. To do so, we need to change the estimate method to ML, so `REML = FALSE` because `lm()` doesn't use the same estimation method as `lmer()`. 
+
+For example, we could compare the following models (we will skip this step):
+
+```{r, eval = FALSE}
+#Linear model with no random effects
+M0 <- lm(grain.weight ~ treatment, data = maize_data)
+
+#Our model 
+M1 <- lmer(grain.weight ~ treatment + (1|Variety_ID) + 
+             (1|Site) + (1|year) + (1|Variety_ID:Site) + 
+             (1|Variety_ID:year) + (1|Variety_ID:treatment), 
+           data = maize_data, REML = FALSE)
+
+#Lmer model with Experiment and Replicate
+M2 <- lmer(grain.weight ~ treatment + (1 | Variety_ID) + 
+             (1 | Experiment/Replicate), data = maize_data, REML = FALSE)
+
+#Lmer model with varying intercepts and slopes
+M3 <- lmer(grain.weight ~ treatment + (treatment | Variety_ID) + 
+             (treatment | Experiment/Replicate), data = maize_data, REML = FALSE)
+```
+
+---
+
+## Model selection 
+
+- Models can be compared by using the AICc function from the `AICcmodavg` package
+
+- The Akaike Information Criterion (AIC) is a measure of model quality that can be used to compare models
+
+- AICc corrects for bias created by small sample sizes
+
+More information for model selection can be found here:  
+https://qcbsrworkshops.github.io/workshop06/workshop06-en/workshop06-en.html#57 
+
+
+-- 
+
+
+**We will skip this process today, and continue with our original `mod_lmer` model.**
+---
+## Check the model assumptions
+
+1. Homogeneity of variance (predicted values vs residual values plot)
+
+2. Check independence of the model residuals 
+
+3. Check normality of model residuals (but mixed-models are robust to deviations from normality)
+
+---
+
+## Homogeneity of variance 
+```{r, out.width = '40%',fig.align = "center"}
+plot(resid(mod_lmer) ~ fitted(mod_lmer), 
+     xlab = 'Predicted values', ylab = 'Normalized residuals')
+```
+
+There are some outliers, but no that many. We will keep all data points. 
+
+However, if we wanted to remove the points we could use the function `identify(resid(mod_lmer)~ fitted(mod_lmer))` and click on the points, which gives us the row number of the individuals from the data table  
+
+---
+## Homogeneity of variance 
+
+
+```{r , echo=FALSE, fig.cap="", out.width = '80%',fig.align = "center"}
+knitr::include_graphics("Images/week3/resid-plots.gif")
+```
+<center> @CSBQ </center>
+
+---
+
+## Independence of model residuals with each covariate
+```{r, out.width = '50%',fig.align = "center"}
+par(mfrow = c(1,3)) #to get a good window to see the graphs
+boxplot(resid(mod_lmer) ~ Variety_ID, data = maize_data, 
+        xlab = "Variety ID", ylab = "Normalized residuals")
+boxplot(resid(mod_lmer) ~ Site, data = maize_data, 
+        xlab = "Site", ylab = "Normalized residuals")
+boxplot(resid(mod_lmer) ~ year, data = maize_data, 
+        xlab = "Year", ylab = "Normalized residuals")
+```
+
+---
+
+[see boxplots on previous slide]
+
+Here, we want to check for a homogeneous dispersion of the residuals around 0, i.e. that there is no pattern of residuals depending on the variable
+
+The assumption is respected here, but we could consider removing some data points from 2013 or from certain sites. We will continue with our current data set. (The code for the figures will be available online)
+---
+## Normality of model residuals 
+
+```{r, out.width = '50%',fig.align = "center"}
+hist(resid(mod_lmer), nclass = 28)
+```
+
+Residuals follow a normal distribution, which indicates that the model is not biased and over-influenced by certain values. 
+
+---
+## Model interpretation
+```{r}
+summary(mod_lmer)
+```
+
+---
+## Fixed effects
+
+You can select the fixed effects from the general model (all explicative variables and interactions) with the `dredge()` function from the `MuMIn` package.
+
+--
+
+In `lme4` package, the author purposefully did not include p-values.
+
+The `nlme` package provide p-values.
+
+--
+
+<br> There is a discussion on how to calculate *Df* and therefore p-values in LMM.<br>
+<br> You can use the `Anova()` function from the `car` package, but it ignore the problem with *Df*<br>
+
+--
+
+The way we interpret the results is by looking at the estimated slope of the fixed effect +/- the 95% confidence interval (if we set our alpha = 0.05).
+
+
+```{r , echo=FALSE, fig.cap="", out.width = '80%',fig.align = "center"}
+knitr::include_graphics("Images/week3/summary_fixed.png")
+```
+
+---
+
+##Fixed effects: confidence intervals
+
+The `confint()` function calculates the confidence intervals for the fixed effect, and for the sigmas, which correspond to the random effects.  
+
+    confint(mod_lmer)
+**Note:** this will take a long time to run.
+
+```{r , echo=FALSE, fig.cap="", out.width = '40%',fig.align = "center"}
+knitr::include_graphics("Images/week3/confint.png")
+```
+
+
+```{r , echo=FALSE, fig.cap="", out.width = '50%',fig.align = "center"}
+knitr::include_graphics("Images/week3/summary_fixed.png")
+```
+
+**If the 95% confidence interval of the slope does not include 0, the slope (here 42.7, seen as the `Estimate` in the fixed effects table), and therefore the effect of the treatment, is signficantly different from 0 at the threshold alpha = 0.05.** 
+---
+
+## Mixed effect models
+
+- Report the fixed effect estimates and the confidence limits: "The effect of the watering treatment on grain weight is strong and confidence intervals are narrow"
+
+- Report how variable the effect is between different random effects: "On average the effect is strong, but there is considerably variation betwen sites, much more than between Variety types"
+
+```{r , echo=FALSE, fig.cap="", out.width = '80%',fig.align = "center"}
+knitr::include_graphics("Images/week3/summary_random.png")
+```
+
+
+--
+
+**Note:** the `Correlation of Fixed Effects` in the summary is the correlation between estimated coefficients for each fix effect.
+
+---
+
+layout: false
+
+class: center, middle
+
+## Heritability
+
+---
+
+layout: true
+background-image: url(Images/logos_new.png)
+background-position: 50% 100%
+background-size: 30%
+---
+
+## Heritability
+
+For many plant breeding applications, we consider the main effects to be random (such as `Variety_ID`), and want to estimate the proportion of variance due to these effects on a certain variable (i.e. `grain.weight`) in our experimental design.
+
+We can use this information to calculate heritability.
+
+--
+
+**Definition:** the heritability is the proportion of phenotypic variability explained by genetic variability.<br><br>The **broad-sense heritability** ( $H^2$ ) can be calculated with a mixed-model allowing us to estimate the $V_G$ (genetic variance) and the $V_E$ (environmental variance):
+
+$H^2=\frac{V_G}{V_P}=\frac{V_G}{V_G+\frac{V_E}{nrep}+V_R}$
+
+--
+
+- $V_P$ is the phenotypic variability: $V_P = V_G + V_E + Cov(G,E)$ . <br>**Note:** when genotypes are not related to specific environment, $Cov(G, E) = 0$. 
+- `nrep` being the mean number of repetition for one genotype in the experiment.
+- $V_R$ residual variability
+- $H^2$ comprise between 0 and 1, with 0 no variability due to genetic.
+
+--
+
+We can extract this information from the summary table. 
+
+---
+Let's go back to our model: 
+```{r}
+summary(mod_lmer)
+```
+
+---
+
+## Extracting the variance
+
+```{r, echo=FALSE, fig.cap="", out.width = '30%',fig.align = "left"}
+knitr::include_graphics("Images/week1/exercise_smaller.png")
+```
+
+Extract the Variance using the following function: 
+```{r}
+print(VarCorr(mod_lmer), comp="Variance")
+```
+
+--
+
+Store the Variance, using the following function: 
+```{r}
+sigmas <- as.data.frame( VarCorr( mod_lmer) )$vcov
+```
+
+---
+
+## Now we have stored our information in a list: 
+
+```{r}
+print(VarCorr(mod_lmer), comp="Variance")
+print(sigmas)
+```
+
+Our `sigmas` list is in the same order as the `VarCorr()` of our model. 
+---
+
+## Calculating H<sup>2</sup>
+
+```{r, echo=FALSE, fig.cap="", out.width = '30%',fig.align = "left"}
+knitr::include_graphics("Images/week1/exercise_smaller.png")
+```
+
+
+$H^2 = \frac{V_G}{(V_G+V_E)/nrep}$
+
+Calculate the $H^2$, given that $V_G$ is the variance of the `Variety_ID`, and $V_E$ is the sum of the variance of the environmental effects in interaction (`Variety_ID:Site`, `Variety_ID:year`, `Variety_ID:treatment`) and of the residuals variance
+
+- In this estimation of heritability, we are ignoring the main random effects
+
+
+**Hint:**
+
+- use the `[]` to choose the number in the `sigmas` data frame, by looking at the order in the `print(VarCorr(mod_lmer), comp="Variance")` table
+- use classical operators ( / , + , and the`sum()` function)
+- to find the nrep of each group, look at the `summary(mod_lmer)` table
+---
+
+## Solution
+
+```{r}
+H2 <- sigmas[4] / #VG = Variety_ID in the 4th position of the list
+  sum( sigmas[4], #VG 
+       sigmas[1]/10, #because 10 sites 
+       sigmas[3]/2, #because 2 treatments 
+       sigmas[2]/2, #because 2 years
+       sigmas[7]/(2*2*10)) #residual divided by number of sites*treatments*years
+H2
+```
+
+The 0.88 value is a relatively high $H^2$ : 88% of phenotypic variability is due to genetic variability. It could be possible since the study likely used pre-selected Varieties which have a high yield. This indicates that grain weight is a highly heritable trait. 
+
+-- 
+
+**Note:** there are several ways to code the model and calculate heritability.That's where it can get quite complicated! For example, if we calculated an $H^2$ using the main effects instead of the interaction effects, we would have an $H^2$ of 0.44.  
+
+
+---
+
+## References
+
+Mazerolle, M. J. *VII - Blocs*. FOR7044 Analyse de Données. Université Laval, Automne 2019. 
+
+Hurlbert, S. H. (1984). Pseudoreplication and the design of ecological field experiments. Ecological monographs, 54(2), 187-211. 
+
+LMMs:
+
+- https://wiki.qcbs.ca/r_workshop6 
+- https://campus.datacamp.com/courses/hierarchical-and-mixed-effects-models-in-r/linear-mixed-effect-models?ex=7 
+- Harrison, X. A., Donaldson, L., Correa-Cano, M. E., Evans, J., Fisher, D. N., Goodwin, C. E., ... & Inger, R. (2018). A brief introduction to mixed effects modelling and multi-model inference in ecology. PeerJ, 6, e4794 
+- Zuur, A.F., Ieno, E.N., Walker, N.J., Saveliev, A.A., Smith, G.M. (2011). Mixed effects models and extensions in ecology with R, Statistics for biology and health. Springer, New York, NY.
+
+Heritability: 
+- https://dyerlab.github.io/Landscape-Genetics-Data-Analysis/quantitative-genetics.html#heritability 
+- https://www.youtube.com/watch?v=LqhNkwVcH-Q&t=411s 
+
+---
+
+Next session: 
+
+- Data visualization
+- Making reproducible graphics with the `ggplot2` package 
